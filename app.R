@@ -1,6 +1,7 @@
 ### Auto Install Required Packages ###
 
-list.of.packages <- c("tidyverse", "ggthemes", "tidygraph", "shinyWidgets", "scales", "shiny")
+list.of.packages <- c("tidyverse", "ggthemes", "tidygraph", "shinyWidgets", "scales", "shiny", "igraph",
+                      "widyr", "visNetwork", "RColorBrewer")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)>0) {install.packages(new.packages)}
 
@@ -10,7 +11,11 @@ require(ggthemes)
 require(tidygraph)
 library(shinyWidgets)
 require(scales)
-
+library(igraph)
+library(ggraph)
+require(widyr)
+require(visNetwork)
+require(RColorBrewer)
 data <- read_csv("shiny_data.csv")
 
 
@@ -33,7 +38,15 @@ ui <- fluidPage(
               choices = sort(unique(data$country_fa))),
   plotOutput(outputId = "barchart_clusters"),
   plotOutput(outputId = "top_5_clusters"),
-  tableOutput(outputId = "top_collab")
+  tableOutput(outputId = "top_collab"),
+  sliderInput(
+    inputId = 'n_words',
+    label = 'Select the Maximum Number of Keyword Pairs',
+    value=50,
+    min = 50,
+    max = 750),
+  visNetworkOutput("network",
+                   height="1000px")
   
 )
 
@@ -63,7 +76,13 @@ server <- function(input, output, session){
         plot.title = element_text(hjust = .5, size = 20),
         axis.title.x = element_text(size = 15),
         axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 15)) +
+        axis.text.y = element_text(size = 15),
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA),
+        panel.background = element_rect(fill = default_background_color,
+                                        color = NA),
+        legend.background = element_rect(fill = default_background_color,
+                                         color = NA)) +
       coord_flip() +
       scale_y_continuous(labels = scales::percent_format(accuracy = 1))
     
@@ -88,19 +107,36 @@ server <- function(input, output, session){
       select(cluster_70_names)
     
     
+    
     p <- data %>%
       filter(cluster_70_names %in% top_5$cluster_70_names) %>%
+      mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
       group_by(PY, cluster_70_names) %>%
       count() %>%
       group_by(cluster_70_names) %>%
       mutate(cumulative = n) %>%
       ggplot() +
-      geom_line(aes(PY, cumulative, color = factor(cluster_70_names))) +
+      geom_line(aes(PY, cumulative, color = factor(cluster_70_names)),
+                size = 2) +
       theme_tufte() +
+      theme(
+        plot.title = element_text(hjust = .5, size = 20),
+        axis.title.x = element_text(size = 15),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        legend.text = element_text(size = 13),
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA),
+        panel.background = element_rect(fill = default_background_color,
+                                        color = NA),
+        legend.background = element_rect(fill = default_background_color,
+                                         color = NA)) +
       ylab("Number of Articles") +
-      ggtitle(paste0('Top 5 Cluster Over Time; ', country_name)) +
+      ggtitle(paste0('Top 5 Cluster Over Time')) +
       theme(legend.title = element_blank(),
-            axis.title.x = element_blank())
+            axis.title.x = element_blank()) +
+      scale_color_brewer(type = 'qual', palette = 2)
     p
     
     
@@ -136,6 +172,67 @@ server <- function(input, output, session){
   
   
   })
+  
+  
+  
+  output$network <- renderVisNetwork({
+    
+    
+    country_name <- input$country
+    
+    
+    tidy_keywords <- data %>%
+      filter(country_fa == country_name) %>%
+      dplyr::select(ID, UT) %>%
+      unnest_tokens(keyword, ID,
+                    token = stringr::str_split, pattern = ";") %>%
+      mutate(keyword = StrTrim(keyword))
+    
+    
+    
+    word_pairs <- tidy_keywords %>% 
+      pairwise_count(keyword, UT, sort = TRUE, upper = FALSE)
+    
+    
+    word_pairs <- word_pairs[1:input$n_words, ]
+    
+    
+    
+    word_pairs <- na.omit(word_pairs)
+    
+    word_pairs_graph <- word_pairs %>%
+      mutate(value = n) %>%
+      graph_from_data_frame(directed = FALSE)
+    
+    
+    
+    
+    word_pairs_graph <- simplify(word_pairs_graph)
+    
+    c1 = cluster_leading_eigen(word_pairs_graph)
+    
+    my_colors <- brewer.pal(length(c1), 'RdYlBu')
+    
+    V(word_pairs_graph)$color <- my_colors[membership(c1)]
+    vis_g <- toVisNetworkData(word_pairs_graph)
+    
+    
+    
+    vis_g$nodes$font.size <- 20
+    
+    visNetwork(vis_g$nodes, vis_g$edges) %>%
+      visIgraphLayout(layout = "layout_with_fr") %>%
+      visEdges(color = list(highlight = 'gold',
+                            hover = 'gold'),
+               hoverWidth = 3) %>%
+      visNodes(color = list(higlight = 'gold',
+                            hover = 'gold')) %>%
+      visOptions(highlightNearest = list(enabled = TRUE, degree = 1,
+                                         labelOnly = FALSE, hover = TRUE),
+                 nodesIdSelection = TRUE)
+    
+  }
+  )
   
   
   
