@@ -32,21 +32,26 @@ ui <- fluidPage(
   
   titlePanel('Marine Biodiversity Country Publications Dashboard'),
   
-  selectInput(inputId = "country",
-              label = "Choose a Country",
-              selected = "USA",
-              choices = sort(unique(data$country_fa))),
-  plotOutput(outputId = "barchart_clusters"),
-  plotOutput(outputId = "top_5_clusters"),
-  tableOutput(outputId = "top_collab"),
-  sliderInput(
-    inputId = 'n_words',
-    label = 'Select the Maximum Number of Keyword Pairs',
-    value=50,
-    min = 50,
-    max = 750),
-  visNetworkOutput("network",
-                   height="1000px")
+  sidebarPanel(  selectInput(inputId = "country",
+                             label = "Choose a Country",
+                             selected = "USA",
+                             choices = sort(unique(data$country_fa)))),
+  
+  mainPanel(
+    tabsetPanel(
+      tabPanel("Plot",   plotOutput(outputId = "barchart_clusters"),
+               plotOutput(outputId = "top_5_clusters")), 
+      tabPanel("International Collaboration", tableOutput(outputId = "top_collab")), 
+      tabPanel("Network", sliderInput(
+        inputId = 'n_words',
+        label = 'Select the Maximum Number of Keyword Pairs',
+        value=50,
+        min = 50,
+        max = 750),
+        visNetworkOutput("network",
+                         height="1000px"))
+    )
+  )
   
 )
 
