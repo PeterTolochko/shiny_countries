@@ -16,7 +16,7 @@ library(ggraph)
 require(widyr)
 require(visNetwork)
 require(RColorBrewer)
-data <- read_csv("shiny_data.csv")
+data <- read_csv("shiny_data.gz")
 
 
 
@@ -39,13 +39,13 @@ ui <- fluidPage(
   
   mainPanel(
     tabsetPanel(
-      tabPanel("Plot",   plotOutput(outputId = "barchart_clusters"),
+      tabPanel("Thematic Clusters",   plotOutput(outputId = "barchart_clusters"),
                plotOutput(outputId = "top_5_clusters")), 
       tabPanel("International Collaboration", tableOutput(outputId = "top_collab")), 
-      tabPanel("Network", sliderInput(
+      tabPanel("Key-words Network", sliderInput(
         inputId = 'n_words',
         label = 'Select the Maximum Number of Keyword Pairs',
-        value=50,
+        value = 50,
         min = 50,
         max = 750),
         visNetworkOutput("network",
@@ -191,7 +191,8 @@ server <- function(input, output, session){
       dplyr::select(ID, UT) %>%
       unnest_tokens(keyword, ID,
                     token = stringr::str_split, pattern = ";") %>%
-      mutate(keyword = StrTrim(keyword))
+      mutate(keyword = StrTrim(keyword)) %>%
+      mutate(keyword = str_replace_all(keyword, " - ", "-"))
     
     
     
