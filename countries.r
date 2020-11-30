@@ -4,8 +4,15 @@ require(tidygraph)
 require(tidytext)
 
 data <- read_csv("wos_data_wit_collab.csv")
-
-
+# 
+# data_abridged <- data[, -c(1:71)]
+# UT <- data$UT
+# ID <- data$ID
+# data_abridged$UT <- UT
+# data_abridged$ID <- ID
+# data_abridged <- data_abridged[, -c(27:56)]
+# 
+# write_csv(data_abridged, "shiny_data.csv")
 
 country_name <- "Greece"
 

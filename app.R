@@ -11,7 +11,7 @@ require(tidygraph)
 library(shinyWidgets)
 require(scales)
 
-data <- read_csv("wos_data_wit_collab.csv")
+data <- read_csv("shiny_data.csv")
 
 
 
