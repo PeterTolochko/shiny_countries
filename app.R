@@ -19,7 +19,7 @@ require(RColorBrewer)
 data <- read_csv("shiny_data.gz")
 
 
-
+# test comment
 load("countries_net.R")
 
 default_background_color <- "#f5f5f2"
