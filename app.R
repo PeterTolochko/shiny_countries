@@ -3,7 +3,7 @@
 list.of.packages <- c("tidyverse", "ggthemes", "tidygraph",
                       "shinyWidgets", "DescTools",
                       "scales", "shiny", "igraph", "ggthemes",
-                      "widyr", "visNetwork", "RColorBrewer")
+                      "widyr", "visNetwork", "RColorBrewer", "tidytext")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)>0) {install.packages(new.packages)}
 
@@ -17,6 +17,7 @@ library(igraph)
 library(ggraph)
 require(widyr)
 require(visNetwork)
+require(tidytext)
 require(RColorBrewer)
 require(DescTools)
 
