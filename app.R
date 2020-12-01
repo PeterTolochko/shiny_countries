@@ -1,6 +1,8 @@
 ### Auto Install Required Packages ###
 
-list.of.packages <- c("tidyverse", "ggthemes", "tidygraph", "shinyWidgets", "scales", "shiny", "igraph",
+list.of.packages <- c("tidyverse", "ggthemes", "tidygraph",
+                      "shinyWidgets", "DescTools",
+                      "scales", "shiny", "igraph", "ggthemes",
                       "widyr", "visNetwork", "RColorBrewer")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)>0) {install.packages(new.packages)}
@@ -16,8 +18,10 @@ library(ggraph)
 require(widyr)
 require(visNetwork)
 require(RColorBrewer)
-data <- read_csv("shiny_data.gz")
+require(DescTools)
 
+data <- read_csv("shiny_data.gz")
+bbnj <- read_csv("bbnj_data.csv")
 
 # test comment
 load("countries_net.R")
@@ -54,7 +58,9 @@ ui <- fluidPage(
         visNetworkOutput("network",
                          height="1000px")),
       
-      tabPanel("Concepts from IR", tableOutput(outputId = "concepts"))
+      tabPanel("Concepts from IR", tableOutput(outputId = "concepts")),
+      
+      tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj"))
     )
   )
   
@@ -309,6 +315,22 @@ server <- function(input, output, session){
     } else {concepts %>%
         filter(value != 0) %>%
         transmute(Concepts = concepts, `Times Occuring` = value)}
+    
+    
+  })
+  
+  
+  output$bbnj <- renderTable({
+    
+    country_name <- str_to_lower(input$country)
+    
+    bbnj %>% filter(actor == country_name) %>%
+      select(frq_sci, total_time) %>%
+      mutate(frq_sci = ifelse(is.na(frq_sci), "No Data Available", as.integer(frq_sci)),
+             total_time = ifelse(is.na(total_time), "No Data Available",
+                                 paste0(total_time, " Minutes"))) %>%
+      transmute(`References to Science` = frq_sci,
+                `Total Speaking Time` = total_time)
     
     
   })

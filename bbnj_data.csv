@@ -1,0 +1,204 @@
+actor,represents_alliance,alliance,host_side_event_igc1,host_side_event_igc2,host_side_event_igc3,frq_sci,total_time,agg_total_time,agg_frq_sci,participants_CBD_cop18,participants_BBNJ_igc1,participants_BBNJ_igc2,participants_BBNJ_igc3,total_publications,total_citations,avg_citation,degree_centrality,eigen_centrality,agg_total_publications,agg_total_citations,r,indegree
+afghanistan,afghanistan,afghanistan,NA,NA,NA,NA,NA,0,0,2,0,0,NA,NA,NA,NA,NA,NA,0,0,NA,0
+albania,albania,albania,NA,NA,NA,NA,NA,NA,NA,2,0,0,2,6,14,2.33333333333333,534,0.00432015825621081,6,14,NA,0
+algeria,African Group,African Group,0,0,0,8,9333,9333,8,5,3,4,2,13,72,5.53846153846154,328,0.00343186156997426,715,10755,"sudan, algeria, algeria, federated states of micronesia, nigeria, solomon islands, norway, eritrea, cameroon, china, russian federation, philippines, palestine, papua new guinea, kenya, mauritius, algeria, cameroon, eritrea, cameroon, singapore, cameroon, cameroon, eritrea, togo, kenya, morocco, seychelles, senegal, tanzania, sierra leone, eritrea, togo, sri lanka, fiji, eritrea, argentina, usa, egypt, sudan, eritrea, nigeria, sri lanka, mauritius, nigeria, federated states of micronesia, cameroon, togo, seychelles, usa",28
+andorra,andorra,andorra,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+angola,angola,African Group,NA,NA,NA,NA,NA,9333,8,7,0,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+antigua and barbuda,antigua and barbuda,CARICOM,NA,NA,NA,NA,NA,9787,24,2,0,0,NA,NA,NA,NA,NA,NA,27,258,NA,0
+argentina,CLAM,CLAM,0,0,0,4,1559,13452,21,13,4,4,NA,188,2077,11.0478723404255,2125,0.0511647567539634,1779,23382,"mexico, monaco, brazil, australia, algeria, venezuela, peru, peru, chile, peru",8
+armenia,armenia,armenia,NA,NA,NA,NA,NA,NA,NA,1,0,0,NA,1,2,2,224,0.00219431912289138,1,2,"paraguay, paraguay",1
+aruba,aruba,aruba,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+australia,australia,australia,0,0,0,17,9085,9085,17,0,6,8,NA,1925,71969,37.3864935064935,24515,0.650438065098478,1925,71969,"monaco, new zealand, switzerland, new zealand, peru, usa, switzerland, tuvalu, usa, australia",6
+austria,austria,eu,NA,NA,NA,NA,NA,20144,37,23,3,2,NA,120,2755,22.9583333333333,2233,0.0454462329215482,9981,277146,NA,0
+azerbaijan,azerbaijan,azerbaijan,NA,NA,NA,NA,NA,NA,NA,1,2,2,NA,8,6,0.75,179,0.00152488861864424,8,6,NA,0
+bahamas,CARICOM,CARICOM,0,1,0,NA,659,9787,24,0,7,7,NA,3,8,2.66666666666667,111,0.00457657833517568,27,258,NA,0
+bahrain,bahrain,bahrain,NA,NA,NA,NA,NA,NA,NA,2,0,0,NA,5,34,6.8,60,0.00137683355023175,5,34,NA,0
+bangladesh,bangladesh,bangladesh,0,0,0,4,1554,0,0,5,4,4,NA,18,153,8.5,170,0.00355351231856085,0,0,norway,1
+barbados,CARICOM,CARICOM,0,0,0,10,2390,9787,24,0,4,5,NA,8,148,18.5,71,0.00249478626754096,27,258,"sri lanka, canada",2
+belarus,belarus,belarus,NA,NA,NA,NA,NA,NA,NA,2,0,0,NA,1,26,26,116,0.00131336152519899,1,26,palestine,1
+belgium,belgium,eu,NA,NA,NA,NA,NA,20144,37,24,7,8,11,318,9678,30.4339622641509,7360,0.173572112354276,9981,277146,"algeria, eu, algeria, united kingdom",3
+belize,AOSIS,AOSIS,0,2,0,10,4381,4381,10,4,5,3,NA,2,57,28.5,66,0.00165908532601989,111,1891,"tonga, papua new guinea, belize, australia, singapore, usa, mauritius, bahamas, bahamas, seychelles, eritrea, maldives, algeria, eritrea, singapore, eu, maldives, maldives, indonesia",14
+benin,benin,African Group,NA,NA,NA,NA,NA,9333,8,3,0,0,NA,3,4,1.33333333333333,30,5.18299420125487e-4,715,10755,togo,1
+bhutan,bhutan,bhutan,NA,NA,NA,NA,NA,0,0,1,0,0,NA,NA,NA,NA,NA,NA,0,0,NA,0
+bolivia,bolivia,bolivia,NA,NA,NA,NA,NA,NA,NA,4,0,0,NA,2,13,6.5,73,0.00152526107253278,2,13,paraguay,1
+bosnia and herzegovina,bosnia and herzegovina,bosnia and herzegovina,NA,NA,NA,NA,NA,NA,NA,4,0,0,NA,1,2,2,59,6.0146322476719e-4,1,2,NA,0
+botswana,botswana,African Group,NA,NA,NA,NA,NA,9333,8,14,4,4,NA,NA,NA,NA,NA,NA,715,10755,paraguay,1
+brazil,CLAM,CLAM,0,0,0,2,1709,13452,21,66,7,9,NA,833,8774,10.5330132052821,9332,0.263922021782995,1779,23382,"argentina, colombia, brazil, mexico, colombia, peru, peru, iran, peru",5
+brunei darussalam,brunei darussalam,brunei darussalam,NA,NA,NA,NA,NA,NA,NA,0,2,3,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+bulgaria,bulgaria,eu,NA,NA,NA,NA,NA,20144,37,3,6,5,NA,36,114,3.16666666666667,1244,0.0157364165619919,9981,277146,NA,0
+burkina faso,burkina faso,African Group,NA,NA,NA,NA,NA,9333,8,10,4,4,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+burundi,burundi,African Group,NA,NA,NA,NA,NA,9333,8,4,NA,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+cambodia,cambodia,cambodia,NA,NA,NA,NA,NA,0,0,8,0,0,NA,3,19,6.33333333333333,121,0.00244675162094947,0,0,NA,0
+cameroon,cameroon,African Group,0,0,0,7,1733,9333,8,10,0,3,NA,4,27,6.75,49,9.7171526340918e-4,715,10755,"cameroon, cameroon",0
+canada,canada,canada,0,2,0,28,12471,12471,28,36,9,9,NA,962,39558,41.1205821205821,13364,0.389019661139583,962,39558,"norway, usa, norway, norway, canada, federated states of micronesia, norway, canada, new zealand, peru, palestine, iceland, switzerland, canada, philippines, sri lanka, philippines, new zealand, australia, ecuador, federated states of micronesia, norway, usa, singapore, new zealand, monaco, turkey, switzerland, switzerland, australia, eu, new zealand, eu, monaco, iceland, federated states of micronesia, peru, canada",16
+cape verde,cape verde,African Group,NA,NA,NA,NA,NA,9333,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+central african republic,central african republic,African Group,NA,NA,NA,NA,NA,9333,8,3,0,0,NA,2,7,3.5,17,2.82015419620183e-4,715,10755,NA,0
+chad,chad,African Group,NA,NA,NA,NA,NA,9333,8,5,0,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+chile,CLAM,CLAM,0,0,0,1,605,13452,21,3,7,6,NA,264,5523,20.9204545454545,4012,0.108317068761903,1779,23382,"ecuador, guatemala, ecuador, guatemala, brazil, peru, chile",4
+china,china,china,0,0,0,30,13247,13247,30,39,19,18,NA,1440,17964,12.475,5765,0.148000742377862,1440,17964,"palestine, algeria, belize, barbados, togo, philippines, myanmar, morocco, ecuador, guatemala, sudan, iran, china, mauritius, palestine, barbados, tonga, barbados, palestine, palestine, algeria, china, iran, papua new guinea, palestine, barbados, fiji, algeria, bangladesh, argentina, singapore, chile, japan, norway, norway, new zealand, cuba, eritrea, india, papua new guinea, colombia, mauritius, seychelles, palestine, china, sri lanka, palestine, algeria, belize, federated states of micronesia, togo, eritrea, seychelles, palestine, algeria, samoa, kenya, palestine, algeria, belize, vanuatu, philippines, nigeria, palestine, trinidad and tobago, uruguay, china, palestine, trinidad and tobago, solomon islands, india, indonesia, eritrea, cameroon, nigeria, morocco, palestine, trinidad and tobago, india, singapore, china, chile, cuba, cameroon, palestine, algeria, trinidad and tobago, solomon islands, india, papua new guinea, singapore, philippines, federated states of micronesia, india, indonesia, philippines, cameroon, palestine, bahamas, algeria, india, peru, palestine, china, eritrea, philippines, indonesia, vanuatu, cameroon, kenya, bahamas, singapore, indonesia, seychelles, mauritius, philippines, thailand, bangladesh, china, cameroon, singapore, indonesia, sri lanka, palestine, jamaica, nauru, indonesia, palestine, algeria, jamaica, palestine, palestine, algeria, usa, palestine, eu, algeria, palestine, palestine, algeria, philippines, ecuador, federated states of micronesia, palestine, palestine, philippines, algeria, singapore, ecuador, philippines, bangladesh, china, palestine, fiji, barbados, norway, indonesia, china, senegal, palestine, palestine, algeria, algeria, fiji, indonesia, singapore, china, ecuador, sri lanka, palestine, fiji, algeria, sri lanka, indonesia, philippines, palestine, belize, barbados, fiji, thailand, togo, philippines, myanmar, morocco, ecuador, guatemala, federated states of micronesia, indonesia, eritrea, china, india, federated states of micronesia, cameroon, mali, barbados, tonga, nauru, nepal, barbados, palestine, palestine, china, iran, papua new guinea, sri lanka, cuba, palestine, barbados, fiji, algeria, bangladesh, argentina, singapore, chile, japan, palestine, algeria, federated states of micronesia, india, singapore, philippines, thailand, china, senegal, sri lanka, palestine, algeria, belize, palestine, trinidad and tobago, indonesia, eritrea, cameroon, china, nigeria, palestine, trinidad and tobago, solomon islands, federated states of micronesia, india, indonesia, papua new guinea, singapore, philippines, jamaica, china, chile, palestine, trinidad and tobago, cuba, cameroon, india, papua new guinea, philippines, federated states of micronesia, palestine, trinidad and tobago, trinidad and tobago, indonesia, philippines, cameroon, iran, palestine, bahamas, algeria, india, belize, jamaica, indonesia, china, philippines, senegal, palestine, algeria, tuvalu, china, cameroon, togo, kenya, sri lanka, morocco, palestine, algeria, bahamas, singapore, india, indonesia, seychelles, palestine, algeria, belize, bahamas, indonesia, singapore, togo, china, mauritius, palestine, algeria, philippines, china, algeria, jamaica, nauru, singapore, eu, jamaica, china, thailand, singapore, canada, senegal, philippines, samoa, algeria, indonesia, marshall islands, belize, china, singapore, palestine, algeria, belize, federated states of micronesia, tanzania, sierra leone, eritrea, viet nam, palestine, algeria, saint lucia, china, new zealand, palestine, algeria, tuvalu, nigeria, singapore, china, indonesia, philippines, togo, eu, sri lanka, cuba, tuvalu, palestine, tuvalu, palestine, nauru, singapore, philippines, indonesia, maldives, palestine, saint lucia, cuba, china, saint lucia, china, costa rica, costa rica, belize, eritrea, china, china, china, china, usa, singapore, maldives, cuba, russian federation, thailand, indonesia, ecuador, mauritius, sri lanka, nicaragua, palestine, algeria, fiji, sri lanka, philippines, indonesia, palestine, barbados, nigeria, fiji, sri lanka, algeria, indonesia, norway, cameroon, indonesia, ghana, china, philippines, palestine, indonesia, indonesia, fiji, palestine, philippines, togo, togo, mauritius, cameroon, sri lanka, barbados, fiji, philippines, iran, sri lanka, algeria, indonesia, palestine, eritrea, philippines, indonesia, singapore, belize, nauru, palestine, jamaica, indonesia, sri lanka, palestine, algeria, nauru, palestine, algeria, trinidad and tobago, solomon islands, seychelles, indonesia, thailand, algeria, trinidad and tobago, solomon islands, india, philippines, brazil, barbados, algeria, fiji, philippines, palestine, algeria, nauru, sri lanka, nauru, cuba, thailand, china, ecuador, palestine, jamaica, cameroon, indonesia, russian federation, palestine, algeria, barbados, fiji, ecuador, federated states of micronesia, sri lanka, philippines, egypt, indonesia, palestine, barbados, federated states of micronesia, india, palestine, nauru, cuba, usa, palestine, usa, norway, palestine, mexico, indonesia, nigeria, indonesia, tuvalu, togo, palestine, indonesia, palestine, cameroon, senegal, togo, maldives, bangladesh, nigeria, maldives, palestine, costa rica, singapore, singapore, bangladesh, bangladesh, eritrea, cuba, cuba, ecuador, federated states of micronesia, federated states of micronesia, federated states of micronesia, china, palestine, usa, indonesia, bangladesh, cameroon, algeria, solomon islands, singapore, trinidad and tobago, algeria, singapore, ecuador, bangladesh, indonesia, senegal, palestine, algeria, indonesia, singapore, china, philippines, sri lanka, china, palestine, singapore, philippines, palestine, costa rica, eritrea, china, singapore, maldives, cuba, russian federation, thailand, philippines, indonesia, cameroon, ecuador, mauritius, mauritius, sri lanka, india, federated states of micronesia, senegal, indonesia, palestine, algeria, trinidad and tobago, solomon islands, norway, china, thailand, palestine, algeria, trinidad and tobago, solomon islands, india, philippines, philippines, philippines, china, singapore, seychelles, senegal, senegal, nigeria, algeria, jamaica, algeria, nauru, china, sri lanka, palestine, jamaica, nauru, cuba, senegal, thailand, china, ecuador, sri lanka, indonesia, nauru, palestine, jamaica, philippines, china, usa, palestine, nauru, south africa, nigeria, china, new zealand, palestine, usa, trinidad and tobago, sri lanka, solomon islands, sierra leone, china, philippines, indonesia, palestine, sri lanka, palestine, costa rica, federated states of micronesia, china, maldives, philippines, indonesia, federated states of micronesia, sri lanka, belize, costa rica, china, singapore, indonesia, sierra leone, sierra leone, fiji, ecuador, norway, sierra leone, philippines, palestine",67
+colombia,CLAM,CLAM,0,0,0,4,3629,13452,21,6,5,3,NA,66,471,7.13636363636364,1047,0.0248192641556995,1779,23382,"colombia, turkey, canada, peru",3
+comoros,comoros,African Group,NA,NA,NA,NA,NA,9333,8,1,0,0,NA,1,27,27,28,5.43310469831149e-4,715,10755,NA,0
+"congo, democratic republic of","congo, democratic republic of",African Group,NA,NA,NA,NA,NA,9333,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+cook islands,cook islands,AOSIS,0,0,0,NA,77,4381,10,1,0,1,NA,NA,NA,NA,NA,NA,111,1891,"fiji, tuvalu, fiji",2
+costa rica,CLAM,CLAM,0,0,2,NA,210,13452,21,16,8,8,NA,40,1381,34.525,723,0.018658018004819,1779,23382,"peru, chile",2
+cote divoire,cote divoire,African Group,0,0,0,NA,28,9333,8,5,1,4,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+croatia,croatia,eu,NA,NA,NA,NA,NA,20144,37,3,3,3,NA,85,710,8.35294117647059,1615,0.0238986380981013,9981,277146,NA,0
+cuba,cuba,AOSIS,0,0,0,9,2317,4381,10,2,4,5,NA,9,244,27.1111111111111,146,0.00278984796311318,111,1891,"ecuador, cuba, nauru, cuba, norway, russian federation, el salvador, cuba, norway, russian federation",5
+cyprus,cyprus,eu,NA,NA,NA,NA,NA,20144,37,NA,4,4,NA,5,12,2.4,1085,0.0126916635794687,9981,277146,NA,0
+czech republic,czech republic,eu,NA,NA,NA,NA,NA,20144,37,4,5,5,NA,76,1746,22.9736842105263,1769,0.0324265830446721,9981,277146,NA,0
+denmark,denmark,eu,NA,NA,NA,NA,NA,20144,37,9,5,6,NA,228,6398,28.0614035087719,5269,0.119256431948936,9981,277146,NA,0
+djibouti,djibouti,African Group,NA,NA,NA,NA,NA,9333,8,2,5,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+dominica,dominica,CARICOM,NA,NA,NA,NA,NA,9787,24,NA,NA,NA,NA,1,1,1,2,5.61380205054938e-5,27,258,NA,0
+dominican republic,CLAM,CLAM,0,0,0,2,452,13452,21,3,4,3,NA,NA,NA,NA,NA,NA,1779,23382,NA,0
+ecuador,ecuador,ecuador,0,0,0,3,765,765,3,12,7,5,NA,16,105,6.5625,872,0.0256801071158879,16,105,"ecuador, peru",1
+egypt,egypt,African Group,0,0,0,NA,0,9333,8,228,4,4,NA,66,679,10.2878787878788,766,0.0136077499357603,715,10755,NA,0
+el salvador,CLAM,CLAM,0,0,0,NA,456,13452,21,4,5,7,NA,2,1,0.5,37,0.00130901439382755,1779,23382,colombia,1
+equatorial guinea,equatorial guinea,African Group,NA,NA,NA,NA,NA,9333,8,1,1,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+eritrea,eritrea,African Group,0,0,0,14,3748,9333,8,1,0,4,NA,NA,NA,NA,NA,NA,715,10755,"colombia, papua new guinea, sri lanka",4
+estonia,estonia,eu,NA,NA,NA,NA,NA,20144,37,5,5,5,NA,54,913,16.9074074074074,1110,0.0178577786933557,9981,277146,NA,0
+ethiopia,ethiopia,African Group,NA,NA,NA,NA,NA,9333,8,11,0,2,NA,8,31,3.875,36,6.5847655108819e-4,715,10755,NA,0
+eu,eu,eu,0,0,0,37,20144,20144,37,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"eu, papua new guinea, eu, japan, new zealand, canada, algeria, eu, holy see, belize, federated states of micronesia, algeria, monaco, new zealand, switzerland, switzerland, federated states of micronesia, canada, jamaica, new zealand, singapore, eu, tuvalu, norway, eu, switzerland, norway, eu, palestine, canada, norway, switzerland, iceland, eu, eu, switzerland, usa, singapore, usa, eu, eu, japan, papua new guinea, switzerland, singapore, switzerland, singapore, japan, eu, federated states of micronesia, algeria, eu, eu, holy see, switzerland, eu, canada, canada, australia, jamaica, switzerland, holy see, new zealand, eu, eu, usa, switzerland, new zealand, eu, senegal, switzerland, eu, new zealand, nauru, switzerland, norway, japan, new zealand, eu, canada, new zealand, usa, russian federation, switzerland, usa, russian federation, russian federation, usa, republic of korea, eu, nigeria, united kingdom, eu, eu, canada, eu, usa, canada, belize, singapore, switzerland, new zealand, monaco, monaco, eu, eu, eu, republic of korea, republic of korea, canada, palestine, algeria, eu, barbados, palestine, fiji, switzerland, algeria, switzerland, republic of korea, australia, usa, norway, new zealand, iceland, usa, colombia, switzerland, russian federation, usa, usa, new zealand, iceland, belgium, eu, republic of korea, maldives, switzerland, federated states of micronesia, eu, new zealand, norway, canada, japan, norway, usa, new zealand, norway, iceland, norway, norway, iceland, canada, norway, switzerland, russian federation, republic of korea, new zealand, belize, belize, singapore, switzerland, maldives, monaco, monaco, monaco, republic of korea, australia, usa, colombia, eu, solomon islands, russian federation, new zealand, usa, japan, china, switzerland, usa, australia, canada, usa, palestine, federated states of micronesia, new zealand, maldives, monaco, iceland, federated states of micronesia, eu, federated states of micronesia",33
+faeroe islands,faeroe islands,faeroe islands,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+federated states of micronesia,PSIDS,PSIDS,0,1,0,18,5816,5,0,2,7,6,NA,1,3,3,53,0.00157486885815556,14,180,NA,0
+fiji,PSIDS,PSIDS,0,0,0,6,3466,18670,53,1,8,8,NA,10,146,14.6,208,0.00663729000800186,14,180,"federated states of micronesia, argentina, papua new guinea, australia, china, tonga, federated states of micronesia, papua new guinea, mauritius, mauritius, eritrea, tuvalu",10
+finland,finland,eu,NA,NA,NA,NA,NA,20144,37,28,5,5,NA,240,5951,24.7958333333333,3103,0.0665918687238069,9981,277146,NA,0
+france,france,eu,0,1,1,2,0,20144,37,34,9,11,NA,1310,36098,27.5557251908397,21232,0.434131704115358,9981,277146,"spain, france",1
+gabon,gabon,African Group,NA,NA,NA,NA,NA,9333,8,5,4,2,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+gambia,gambia,African Group,NA,NA,NA,NA,NA,9333,8,4,4,5,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+georgia,georgia,georgia,NA,NA,NA,NA,NA,NA,NA,4,NA,0,NA,4,25,6.25,298,0.00379448711082859,4,25,"fiji, peru, peru",2
+germany,germany,eu,1,1,1,NA,0,20144,37,35,13,19,NA,1164,30409,26.1245704467354,20239,0.456623606136718,9981,277146,eu,1
+ghana,ghana,African Group,0,0,0,NA,41,9333,8,10,3,6,NA,5,16,3.2,107,0.0027237433373795,715,10755,fiji,1
+greece,greece,eu,NA,NA,NA,NA,NA,20144,37,4,3,3,NA,277,4517,16.3068592057762,5037,0.0694738379752863,9981,277146,NA,0
+greenland,greenland,greenland,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2,2,1,221,0.00379508101790462,2,2,NA,0
+grenada,grenada,CARICOM,NA,NA,NA,NA,NA,9787,24,3,2,2,NA,NA,NA,NA,NA,NA,27,258,NA,0
+guatemala,CLAM,CLAM,0,0,0,2,164,13452,21,3,4,3,NA,NA,NA,NA,NA,NA,1779,23382,peru,1
+guinea,guinea,African Group,NA,NA,NA,NA,NA,9333,8,3,0,4,NA,1,2,2,76,0.0012509558704041,715,10755,"federated states of micronesia, federated states of micronesia, federated states of micronesia",1
+guinea-bissau,guinea-bissau,African Group,NA,NA,NA,NA,NA,9333,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+guyana,guyana,CARICOM,NA,NA,NA,NA,NA,9787,24,5,4,4,NA,NA,NA,NA,NA,NA,27,258,NA,0
+haiti,haiti,CARICOM,NA,NA,NA,NA,NA,9787,24,2,0,0,NA,NA,NA,NA,NA,NA,27,258,NA,0
+holy see,holy see,holy see,0,0,0,11,6525,6525,11,3,0,4,NA,NA,NA,NA,NA,NA,NA,NA,"fiji, holy see, tonga, holy see, fiji, togo, iceland",4
+honduras,CLAM,CLAM,0,0,0,NA,967,13452,21,9,5,6,NA,1,0,0,12,3.07597944238264e-4,1779,23382,"bangladesh, brazil, peru, chile, palestine, bangladesh, peru",5
+hong kong,hong kong,hong kong,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+hungary,hungary,eu,NA,NA,NA,NA,NA,20144,37,2,4,4,NA,21,290,13.8095238095238,542,0.0093341215339267,9981,277146,NA,0
+iceland,iceland,iceland,0,0,0,9,4877,4877,9,2,5,6,NA,19,221,11.6315789473684,1081,0.0255098320117681,19,221,"algeria, iceland, iceland, russian federation, usa, holy see, new zealand, iceland, iceland",5
+india,india,india,0,0,0,10,2093,2093,10,5,7,6,NA,527,5267,9.99430740037951,1904,0.0457082028646522,527,5267,"bangladesh, maldives",2
+indonesia,indonesia,indonesia,0,0,0,2,3040,3040,2,32,10,6,NA,76,279,3.67105263157895,1977,0.0482847479057003,76,279,"indonesia, indonesia, indonesia",0
+iran,iran,iran,0,0,0,2,1197,1197,2,3,6,4,NA,133,631,4.74436090225564,608,0.0120250881982134,133,631,"colombia, colombia, russian federation",2
+iraq,iraq,iraq,NA,NA,NA,NA,NA,NA,NA,7,4,2,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+ireland,ireland,eu,0,0,1,NA,0,20144,37,3,5,4,NA,130,3602,27.7076923076923,2939,0.0664600537386742,9981,277146,NA,0
+israel,israel,israel,0,0,0,2,360,360,2,10,6,3,NA,174,3890,22.3563218390805,2804,0.0594566102917236,174,3890,"peru, usa",2
+italy,italy,eu,NA,NA,NA,NA,NA,20144,37,9,3,3,NA,1368,27961,20.4393274853801,14613,0.257747222208437,9981,277146,spain,1
+jamaica,CARICOM,CARICOM,1,0,0,5,3339,9787,24,4,4,3,NA,6,16,2.66666666666667,69,0.00192123094064636,27,258,"jamaica, tonga, norway, belize, norway, jamaica",3
+japan,japan,japan,0,0,0,19,7278,7278,19,44,21,21,NA,650,10394,15.9907692307692,6498,0.142046100371039,650,10394,"japan, australia, japan, russian federation, holy see, australia, usa, republic of korea, holy see, venezuela, japan, new zealand, usa, republic of korea, japan, japan, republic of korea, usa, russian federation, nigeria, philippines, russian federation, iceland, federated states of micronesia",12
+jordan,jordan,jordan,NA,NA,NA,NA,NA,NA,NA,10,0,0,NA,11,96,8.72727272727273,89,0.00141869170218288,11,96,NA,0
+kazakhstan,kazakhstan,kazakhstan,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6,18,3,68,6.66652449991478e-4,6,18,NA,0
+kenya,kenya,African Group,0,0,0,NA,358,9333,8,32,6,7,NA,30,720,24,922,0.0245666694159868,715,10755,NA,0
+kiribati,kiribati,AOSIS,0,0,0,1,351,4381,10,1,4,0,NA,NA,NA,NA,NA,NA,111,0,kiribati,0
+"korea, democratic peoples republic","korea, democratic peoples republic","korea, democratic peoples republic",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+kuwait,kuwait,kuwait,NA,NA,NA,NA,NA,NA,NA,5,0,3,NA,14,92,6.57142857142857,145,0.00381018127792592,14,92,NA,0
+kyrgyzstan,kyrgyzstan,kyrgyzstan,NA,NA,NA,NA,NA,NA,NA,3,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+laos,laos,laos,NA,NA,NA,NA,NA,0,0,NA,NA,NA,NA,1,30,30,68,0.00113251928112967,0,0,eu,1
+latvia,latvia,eu,NA,NA,NA,NA,NA,20144,37,2,3,3,NA,11,32,2.90909090909091,303,0.00335998859845883,9981,277146,NA,0
+lebanon,lebanon,lebanon,NA,NA,NA,NA,NA,NA,NA,1,5,0,NA,13,47,3.61538461538462,266,0.00229203478051121,13,47,NA,0
+lesotho,lesotho,African Group,NA,NA,NA,NA,NA,9333,8,3,0,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+liberia,liberia,African Group,NA,NA,NA,NA,NA,9333,8,3,0,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+libya,libya,African Group,NA,NA,NA,NA,NA,9333,8,1,0,0,NA,4,3,0.75,31,3.21467039558497e-4,715,10755,NA,0
+liechtenstein,liechtenstein,liechtenstein,NA,NA,NA,NA,NA,NA,NA,2,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+lithuania,lithuania,eu,NA,NA,NA,NA,NA,20144,37,2,3,3,NA,27,396,14.6666666666667,996,0.0161456007330179,9981,277146,NA,0
+luxembourg,luxembourg,eu,NA,NA,NA,NA,NA,20144,37,4,0,0,NA,7,74,10.5714285714286,261,0.00324684866127769,9981,277146,NA,0
+macedonia,macedonia,macedonia,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+madagascar,madagascar,African Group,NA,NA,NA,NA,NA,9333,8,19,4,4,NA,7,59,8.42857142857143,537,0.0152154047073527,715,10755,NA,0
+malawi,Least Developed,Least Developed,0,0,0,NA,0,9333,8,6,0,0,NA,NA,NA,NA,NA,NA,715,10755,"malawi, paraguay, paraguay, sudan, eritrea",3
+malaysia,malaysia,malaysia,0,0,0,NA,34,34,NA,17,4,3,NA,91,675,7.41758241758242,1542,0.0279264990338567,91,675,NA,0
+maldives,maldives,AOSIS,1,0,0,NA,895,4381,10,8,9,8,NA,1,3,3,78,0.00171908844090264,111,1891,NA,0
+mali,mali,African Group,0,0,0,NA,0,9333,8,6,4,4,NA,NA,NA,NA,NA,NA,715,10755,"paraguay, paraguay",1
+malta,malta,eu,NA,NA,NA,NA,NA,20144,37,3,3,3,NA,8,94,11.75,780,0.00831587946033507,9981,277146,NA,0
+marshall islands,marshall islands,AOSIS,0,0,0,2,351,4381,10,1,6,6,NA,NA,NA,NA,NA,NA,111,1891,tuvalu,1
+mauritania,mauritania,African Group,NA,NA,NA,NA,NA,9333,8,8,NA,0,NA,1,4,4,45,0.00110321673796229,715,10755,NA,0
+mauritius,mauritius,African Group,0,0,0,7,1655,9333,8,2,5,6,NA,9,52,5.77777777777778,225,0.00497886503819216,715,10755,"mauritius, norway, tonga, sri lanka, norway",3
+mexico,CLAM,CLAM,0,0,0,2,1495,13452,21,23,6,0,NA,316,3434,10.8670886075949,3091,0.0944514117071121,1779,23382,"chile, chile",1
+moldova,moldova,moldova,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+monaco,monaco,monaco,0,1,0,6,2291,2291,6,2,3,4,NA,9,118,13.1111111111111,376,0.00899734143702782,9,118,spain,1
+mongolia,mongolia,mongolia,NA,NA,NA,NA,NA,NA,NA,NA,0,2,NA,1,15,15,14,2.08248627358322e-4,1,15,paraguay,1
+montenegro,montenegro,montenegro,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,11,41,3.72727272727273,560,0.00702969533107463,11,41,NA,0
+morocco,morocco,African Group,0,0,0,2,358,9333,8,20,2,2,NA,26,151,5.80769230769231,1358,0.0264849892765079,715,10755,NA,0
+mozambique,mozambique,African Group,NA,NA,NA,NA,NA,9333,8,9,1,4,NA,4,32,8,130,0.00261386814873721,715,10755,NA,0
+myanmar,myanmar,myanmar,0,0,0,1,0,0,0,3,1,2,NA,1,28,28,128,0.00159729510484344,0,0,NA,0
+namibia,namibia,African Group,NA,NA,NA,NA,NA,9333,8,19,0,0,NA,2,66,33,80,0.00123135137468981,715,10755,NA,0
+nauru,PSIDS,PSIDS,0,0,0,12,4879,5,0,NA,6,0,NA,NA,NA,NA,NA,NA,14,180,"nauru, canada, canada",1
+nepal,nepal,nepal,0,0,0,NA,351,0,0,8,3,5,NA,4,34,8.5,23,2.75677877891046e-4,0,0,NA,0
+netherlands,netherlands,eu,NA,NA,NA,NA,NA,20144,37,8,9,9,NA,325,12409,38.1815384615385,7477,0.17437838615589701,9981,277146,NA,0
+new zealand,new zealand,new zealand,0,0,0,17,12748,12748,17,7,8,6,NA,490,13719,27.9979591836735,5228,0.13914663241673,490,13719,"australia, monaco, new zealand, cameroon, indonesia, japan, canada, usa, china",8
+nicaragua,nicaragua,nicaragua,0,0,0,2,186,186,2,1,4,2,NA,4,10,2.5,133,0.00558764564032442,4,10,nicaragua,0
+niger,niger,African Group,NA,NA,NA,NA,NA,9333,8,7,0,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+nigeria,nigeria,African Group,0,0,0,1,2598,9333,8,33,4,14,NA,14,28,2,51,0.00115817653658472,715,10755,"holy see, holy see, nigeria",2
+norway,norway,norway,2,1,1,27,13680,13680,27,18,10,7,NA,310,8723,28.1387096774194,7189,0.164315949768324,310,8723,"mauritius, norway, norway, tuvalu, canada, fiji, norway, new zealand, switzerland, usa, canada, mauritius, new zealand, australia, usa, canada, new zealand, norway, eritrea, japan, maldives, new zealand, iceland, usa, norway, new zealand, switzerland, eritrea, japan, singapore, monaco, australia, switzerland, singapore",14
+oman,oman,oman,NA,NA,NA,NA,NA,NA,NA,9,3,0,NA,13,225,17.3076923076923,259,0.0061273447705938,13,225,NA,0
+pakistan,pakistan,pakistan,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,35,152,4.34285714285714,81,0.00135203260400039,35,152,NA,0
+palau,palau,AOSIS,0,0,0,2,215,4381,10,3,2,4,NA,4,266,66.5,62,0.00190343129334924,111,1891,"united kingdom, palau, palau",1
+palestine,G77/China,G77/China,0,0,0,17,6994,6994,17,5,0,3,NA,NA,NA,NA,NA,NA,NA,NA,"algeria, cuba, algeria, colombia, mauritius, togo, bangladesh, singapore, philippines, solomon islands, singapore, kenya, palestine, palestine, palestine, palestine, palestine, philippines, morocco, ecuador, china, mauritius, cameroon, mali, tonga, iran, bangladesh, belize, india, cameroon, singapore, thailand, china, senegal, belize, india, cameroon, indonesia, singapore, philippines, jamaica, china, cameroon, india, papua new guinea, philippines, india, indonesia, philippines, cameroon, iran, bahamas, algeria, india, indonesia, china, philippines, cameroon, togo, seychelles, china, mauritius, philippines, china, jamaica, nauru, singapore, algeria, china, thailand, singapore, singapore, algeria, cuba, eritrea, china, singapore, maldives, cuba, indonesia, switzerland, indonesia, brazil, eritrea, indonesia, indonesia, colombia, cuba, palestine, philippines, egypt, palestine, barbados, costa rica, thailand, sudan, indonesia, myanmar, eritrea, philippines, nigeria, iran, singapore, china, indonesia, togo, indonesia, algeria, iran, sri lanka, nicaragua, philippines, philippines, philippines, algeria, indonesia, ecuador, sri lanka, indonesia",41
+panama,CLAM,CLAM,NA,NA,NA,NA,NA,13452,21,7,3,3,NA,29,762,26.2758620689655,772,0.0253849428118568,1779,23382,"chile, peru, chile",2
+papua new guinea,papua new guinea,AOSIS,0,1,0,6,2133,4381,10,3,8,5,NA,2,49,24.5,141,0.00361551736518944,111,1891,"federated states of micronesia, federated states of micronesia, federated states of micronesia",1
+paraguay,Landlocked,paraguay,0,0,0,4,811,811,4,8,5,4,NA,2,1,0.5,48,9.20746458761207e-4,NA,NA,"nepal, paraguay",1
+peru,CLAM,CLAM,0,0,0,2,208,13452,21,5,3,3,NA,7,86,12.2857142857143,463,0.0106160435238547,1779,23382,"peru, peru, chile",1
+philippines,philippines,philippines,0,0,0,11,4042,4042,11,31,23,19,NA,102,2042,20.0196078431373,1800,0.0429083071297523,102,2042,singapore,1
+poland,poland,eu,NA,NA,NA,NA,NA,20144,37,4,4,3,NA,220,2054,9.33636363636364,2880,0.0601565249059806,9981,277146,NA,0
+portugal,portugal,eu,NA,NA,NA,NA,NA,20144,37,5,3,6,NA,481,8311,17.2785862785863,8930,0.193429544505891,9981,277146,palestine,1
+qatar,qatar,qatar,NA,NA,NA,NA,NA,NA,NA,8,0,0,NA,8,28,3.5,109,0.00289079554763889,8,28,NA,0
+republic of congo,republic of congo,African Group,NA,NA,NA,NA,NA,9333,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+republic of korea,republic of korea,republic of korea,0,0,1,10,3417,3417,10,60,15,15,NA,NA,NA,NA,NA,NA,NA,NA,russian federation,1
+romania,romania,eu,NA,NA,NA,NA,NA,20144,37,7,5,7,NA,54,137,2.53703703703704,584,0.00597263146930149,9981,277146,NA,0
+russian federation,russian federation,russian federation,0,0,0,21,11376,11376,21,2,7,14,NA,495,3465,7,4501,0.0990202659163034,495,3465,NA,0
+rwanda,rwanda,African Group,NA,NA,NA,NA,NA,9333,8,2,0,0,NA,1,10,10,2,2.49995065765299e-5,715,10755,NA,0
+saint helena,saint helena,saint helena,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+saint kitts and nevis,saint kitts and nevis,saint kitts and nevis,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+saint lucia,CARICOM,CARICOM,0,0,0,2,623,9787,24,1,2,2,NA,1,0,0,11,4.32878873819445e-4,27,258,"saint lucia, usa",1
+saint vincent and the grenadines,saint vincent and the grenadines,saint vincent and the grenadines,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+samoa,samoa,PSIDS,0,0,0,2,329,5,0,5,1,6,NA,NA,NA,NA,NA,NA,14,180,"samoa, tuvalu",1
+san marino,san marino,san marino,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+sao tome and principe,sao tome and principe,AOSIS,NA,NA,NA,NA,NA,4381,10,NA,NA,NA,NA,NA,NA,NA,NA,NA,111,1891,NA,0
+saudi arabia,saudi arabia,saudi arabia,NA,NA,NA,NA,NA,NA,NA,9,8,10,NA,88,832,9.45454545454546,1280,0.0310590364342674,88,832,NA,0
+senegal,senegal,African Group,0,0,0,2,1369,9333,8,11,0,0,NA,11,47,4.27272727272727,338,0.00642777515991868,715,10755,"senegal, senegal",0
+serbia,serbia,serbia,NA,NA,NA,NA,NA,NA,NA,2,3,0,NA,7,19,2.71428571428571,249,0.00238056340308774,7,19,NA,0
+seychelles,seychelles,African Group,1,0,0,4,951,9333,8,7,4,4,NA,8,131,16.375,194,0.00476307902753701,715,10755,fiji,1
+sierra leone,sierra leone,African Group,0,0,0,2,0,9333,8,1,3,4,NA,NA,NA,NA,NA,NA,715,10755,sierra leone,0
+singapore,singapore,AOSIS,0,0,1,11,6969,4381,10,2,9,10,NA,93,1272,13.6774193548387,1390,0.0301454633291635,111,1891,"holy see, singapore, usa, australia, singapore, japan, togo, russian federation, australia, cameroon, canada, singapore, norway, usa, norway, russian federation, eu, new zealand, norway, australia, solomon islands, usa, eu, eu, switzerland, sierra leone",14
+slovakia,slovakia,eu,NA,NA,NA,NA,NA,20144,37,7,5,5,NA,9,42,4.66666666666667,407,0.00459916574193315,9981,277146,NA,0
+slovenia,slovenia,eu,NA,NA,NA,NA,NA,20144,37,3,3,2,NA,31,769,24.8064516129032,1163,0.0142551522024535,9981,277146,NA,0
+solomon islands,PSIDS,PSIDS,0,0,0,8,1669,18670,53,1,7,0,NA,2,18,9,85,0.00152278103849471,14,180,seychelles,1
+somalia,somalia,African Group,NA,NA,NA,NA,NA,9333,8,2,0,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+south africa,south africa,African Group,0,1,0,NA,245,9333,8,62,4,4,NA,382,7462,19.5340314136126,5786,0.152977582830577,715,10755,NA,0
+south sudan,south sudan,African Group,NA,NA,NA,NA,NA,9333,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+spain,spain,eu,NA,NA,NA,NA,NA,20144,37,16,9,9,NA,975,23582,24.1866666666667,14761,0.297977865397845,9981,277146,spain,0
+sri lanka,sri lanka,sri lanka,0,0,0,7,1747,1747,7,2,4,4,NA,9,93,10.3333333333333,290,0.00704317841698336,9,93,"sri lanka, seychelles, ghana, philippines",3
+sudan,sudan,African Group,0,0,0,NA,0,9333,8,2,2,3,NA,1,3,3,42,6.14837160506095e-4,715,10755,NA,0
+suriname,suriname,CARICOM,NA,NA,NA,NA,NA,9787,24,2,2,2,NA,NA,NA,NA,NA,NA,27,258,NA,0
+swaziland,swaziland,African Group,NA,NA,NA,NA,NA,9333,8,5,2,3,NA,1,11,11,NA,NA,715,10755,NA,0
+sweden,sweden,eu,1,0,1,NA,0,20144,37,18,7,7,NA,338,15105,44.689349112426,5093,0.118911546443247,9981,277146,NA,0
+switzerland,switzerland,switzerland,0,0,0,9,4768,4768,9,14,14,14,NA,167,6178,36.9940119760479,5087,0.129390306385261,167,6178,"republic of korea, singapore, holy see, saint lucia, eu, usa, usa, canada, china, usa, usa, russian federation, switzerland, bangladesh, usa, japan, eu",11
+syrian arabic republic,syrian arabic republic,syrian arabic republic,0,0,0,NA,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0
+taiwan,taiwan,taiwan,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,138,1946,14.1014492753623,2214,0.0543743960706379,138,1946,NA,0
+tajikistan,tajikistan,Non UNCLOS Party,NA,NA,NA,NA,NA,2398,10,4,0,0,NA,NA,NA,NA,NA,NA,265,2236,NA,0
+tanzania,tanzania,African Group,0,0,0,NA,0,9333,8,NA,NA,NA,NA,20,304,15.2,334,0.00707400496379663,715,10755,NA,0
+thailand,thailand,thailand,0,0,0,12,890,890,12,42,8,4,NA,83,798,9.6144578313253,970,0.0152035946793946,83,798,NA,0
+timor-leste,timor-leste,AOSIS,NA,NA,NA,NA,NA,4381,10,NA,NA,NA,NA,NA,NA,NA,NA,NA,111,0,NA,0
+togo,togo,African Group,0,0,0,2,1157,9333,8,2,4,6,NA,NA,NA,NA,NA,NA,715,10755,"togo, kenya",1
+tonga,tonga,PSIDS,0,0,0,2,831,18670,53,4,8,8,NA,NA,NA,NA,NA,NA,14,180,tonga,0
+trinidad and tobago,CARICOM,CARICOM,0,0,0,7,2689,9787,24,1,4,5,NA,8,85,10.625,64,0.00138152917465922,27,258,solomon islands,1
+tunisia,tunisia,African Group,NA,NA,NA,NA,NA,9333,8,1,0,0,NA,87,776,8.91954022988506,728,0.011258833377894,715,10755,NA,0
+turkey,Non UNCLOS Party,Non UNCLOS Party,0,0,0,10,2398,2398,10,12,6,2,NA,233,1694,7.27038626609442,2812,0.0338557036065816,265,2236,"colombia, turkey, algeria, colombia, turkey, turkey, colombia, eu",3
+turkmenistan,turkmenistan,Non UNCLOS Party,NA,NA,NA,NA,NA,2398,10,1,0,0,NA,NA,NA,NA,NA,NA,265,2236,NA,0
+tuvalu,PSIDS,PSIDS,0,0,0,9,2840,5,0,3,0,3,NA,NA,NA,NA,NA,NA,14,180,new zealand,1
+uganda,uganda,African Group,0,0,0,NA,0,9333,8,28,0,0,NA,3,21,7,54,7.63940199644996e-4,715,10755,NA,0
+ukraine,ukraine,ukraine,NA,NA,NA,NA,NA,NA,NA,1,0,0,NA,37,161,4.35135135135135,1277,0.0202286071066085,37,161,NA,0
+united arab emirates,united arab emirates,united arab emirates,NA,NA,NA,NA,NA,NA,NA,6,6,0,NA,12,119,9.91666666666667,425,0.00995440746418868,12,119,NA,0
+united kingdom,united kingdom,eu,NA,NA,NA,2,NA,20144,37,NA,NA,NA,NA,2063,82987,40.2263693650024,32047,0.73735936032237,9981,277146,NA,0
+uruguay,CLAM,CLAM,0,0,0,2,1998,13452,21,4,7,5,NA,33,873,26.4545454545455,815,0.0179180144064475,1779,23382,"chile, chile",1
+usa,usa,usa,0,0,0,28,14880,14880,28,16,21,20,NA,4563,228086,49.9859741398203,57107,1,4563,228086,"new zealand, usa, switzerland, philippines, canada, usa, russian federation, new zealand, republic of korea, iceland, peru, venezuela, eu",10
+uzbekistan,uzbekistan,Non UNCLOS Party,NA,NA,NA,NA,NA,2398,10,NA,NA,NA,NA,2,47,23.5,30,3.91389281938986e-4,265,2236,NA,0
+vanuatu,vanuatu,PSIDS,0,0,0,2,411,5,0,NA,4,0,NA,1,13,13,13,3.06122457613421e-4,14,180,"monaco, cook islands, united kingdom",3
+venezuela,Non UNCLOS Party,Non UNCLOS Party,0,0,0,NA,0,2398,10,3,4,5,NA,30,495,16.5,804,0.0217430023051163,265,2236,"mexico, eu, venezuela, china, cuba, iran, nicaragua, venezuela, nicaragua, iran, china, peru, venezuela, nicaragua, iran, china",7
+viet nam,viet nam,viet nam,0,0,0,NA,381,381,NA,8,8,7,NA,28,117,4.17857142857143,1141,0.0285164904615767,28,117,NA,0
+yemen,yemen,yemen,NA,NA,NA,NA,NA,0,0,2,0,0,NA,2,16,8,27,3.90305225927029e-4,0,0,NA,0
+zambia,zambia,African Group,NA,NA,NA,NA,NA,9333,8,6,0,0,NA,NA,NA,NA,NA,NA,715,10755,NA,0
+zimbabwe,zimbabwe,African Group,NA,NA,NA,NA,NA,9333,8,10,0,0,NA,1,10,10,16,2.57785819039131e-4,715,10755,NA,0
