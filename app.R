@@ -1,11 +1,11 @@
 ### Auto Install Required Packages ###
 
-list.of.packages <- c("tidyverse", "ggthemes", "tidygraph",
-                      "shinyWidgets", "DescTools",
-                      "scales", "shiny", "igraph", "ggthemes",
-                      "widyr", "visNetwork", "RColorBrewer", "tidytext")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)>0) {install.packages(new.packages)}
+# list.of.packages <- c("tidyverse", "ggthemes", "tidygraph",
+#                       "shinyWidgets", "DescTools",
+#                       "scales", "shiny", "igraph", "ggthemes",
+#                       "widyr", "visNetwork", "RColorBrewer", "tidytext")
+# new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+# if(length(new.packages)>0) {install.packages(new.packages)}
 
 
 require(tidyverse)
@@ -20,9 +20,11 @@ require(visNetwork)
 require(tidytext)
 require(RColorBrewer)
 require(DescTools)
+require(shiny)
 
 data <- read_csv("shiny_data.gz")
-bbnj <- read_csv("bbnj_data.csv")
+bbnj <- read_csv("states.csv")
+concepts_bbnj <- read_csv("concept_count.csv")
 
 # test comment
 load("countries_net.R")
@@ -61,7 +63,11 @@ ui <- fluidPage(
       
       tabPanel("Concepts from IR", tableOutput(outputId = "concepts")),
       
-      tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj"))
+      tabPanel("Concepts in Negotiations", tableOutput(outputId = "concepts2")),
+      
+      tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj")),
+      
+      tabPanel("BBNJ Talk Time by Package", plotOutput(outputId = "time"))
     )
   )
   
@@ -303,7 +309,7 @@ server <- function(input, output, session){
       "Intra- and Intergenerational Equity",
       "Restoration of Integrity of Ecosystems",
       "Ecologically or Biologically Significant Areas",
-      "Common Heritage of mankind",
+      "Common Heritage of Mankind",
       "Total"
     )
     
@@ -321,6 +327,29 @@ server <- function(input, output, session){
   })
   
   
+  output$concepts2 <- renderTable({
+    
+    
+    country_name <- str_to_lower(input$country)
+    
+    out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) %>% 
+      tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
+      filter(actor == country_name) %>% 
+      group_by(concept) %>% count() 
+    
+    if (dim(out_concept_bbnj)[1] == 0) {
+      print(paste0("No Concepts in ", str_to_title(country_name), "'s ", "Data"))
+    } else {out_concept_bbnj %>%
+        transmute(Concept = str_to_title(concept),
+                  `Times Occuring`= n) %>% 
+        ungroup() %>%
+        select(-concept)}
+
+
+    
+  })
+  
+  
   output$bbnj <- renderTable({
     
     country_name <- str_to_lower(input$country)
@@ -329,12 +358,68 @@ server <- function(input, output, session){
       select(frq_sci, total_time) %>%
       mutate(frq_sci = ifelse(is.na(frq_sci), "No Data Available", as.integer(frq_sci)),
              total_time = ifelse(is.na(total_time), "No Data Available",
-                                 paste0(total_time, " Minutes"))) %>%
+                                 paste0(round(total_time/60, 2), " Minutes"))) %>%
       transmute(`References to Science` = frq_sci,
                 `Total Speaking Time` = total_time)
     
     
   })
+  
+  
+  output$time <- renderPlot({
+    
+    country_name <- str_to_lower(input$country)
+    
+    bbnj_output <- bbnj %>% filter(actor == country_name)
+    
+    if (dim(bbnj_output)[1] == 0) {
+      
+      par(mar = c(0,0,0,0),
+          bg = default_background_color)
+      plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
+      text(x = 0.5, y = 0.5, paste("Ther is no data for", str_to_title(country_name)), 
+           cex = 1.6, col = "black",
+           bg = "blue")
+      
+      
+    } else {
+      
+      bbnj_output %>%
+      select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
+      prop.table() %>% 
+      as_tibble() %>%
+      transmute(
+        MGR  = talk_time_MGR,
+        ABMT = talk_time_ABMT,
+        EIA  = talk_time_EIA,
+        CBTT = talk_time_CBTT,
+        Crosscutting = talk_time_crosscutting
+      ) %>%
+      gather(Package, Time, MGR:Crosscutting) %>% 
+      ggplot() + 
+      geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
+      ylab("% of Speaking Time") +
+      theme_tufte() +
+      theme(
+        plot.title = element_text(hjust = .5, size = 20),
+        axis.title.x = element_text(size = 15),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        legend.text = element_text(size = 13),
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA),
+        panel.background = element_rect(fill = default_background_color,
+                                        color = NA),
+        legend.background = element_rect(fill = default_background_color,
+                                         color = NA))
+    }
+    
+    
+  })
+  
+  
   
   
 }
