@@ -3,7 +3,7 @@
 # list.of.packages <- c("tidyverse", "ggthemes", "tidygraph",
 #                       "shinyWidgets", "DescTools",
 #                       "scales", "shiny", "igraph", "ggthemes",
-#                       "widyr", "visNetwork", "RColorBrewer", "tidytext")
+#                       "widyr", "visNetwork", "RColorBrewer", "tidytext", "countrycode")
 # new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 # if(length(new.packages)>0) {install.packages(new.packages)}
 
@@ -21,13 +21,77 @@ require(tidytext)
 require(RColorBrewer)
 require(DescTools)
 require(shiny)
+require(countrycode)
+
+
+
+
+world_regions <- tribble(
+  ~small, ~large,
+  "Australia and New Zealand", "Oceania",
+  "Latin America and the Caribbean", 'South America',
+  "Central Asia", "Asia",
+  "Eastern Africa", "Africa",
+  "Eastern Asia", "Asia", 
+  "Eastern Europe", 'Europe',
+  "Melanesia", "Oceania",
+  "Micronesia", "Oceania",
+  "Middle Africa",  "Africa",
+  "Northern Africa", "Africa",
+  "Northern America", "North America",
+  "Northern Europe", 'Europe',
+  "Polynesia", 'Oceania',
+  "Latin America and the Caribbean", "South America",
+  "South-eastern Asia", "Asia",
+  "Southern Africa", "Africa",
+  "Southern Asia", "Asia",
+  "Southern Europe", 'Europe',
+  "Western Africa", "Africa",
+  "Western Asia", "Asia",
+  "Western Europe", "Europe",
+  "Sub-Saharan Africa", 'Africa'
+)
+
+get_region <- function(country) {
+  
+  require(countrycode)
+  out <- ifelse(
+    country == 'micronesia', 'Oceania',
+    ifelse(country == 'taiwan', 'Asia',
+           world_regions$large[match(countrycode(country, origin = 'country.name',
+                                                 destination = 'un.regionsub.name'),
+                                     world_regions$small)])
+  )
+  
+  return(out)
+}
+
+
 
 data <- read_csv("shiny_data.gz")
 bbnj <- read_csv("states.csv")
 concepts_bbnj <- read_csv("concept_count.csv")
+cnet <- read_csv("cnet.csv")
+
+cnet <- cnet %>% select(-c("X1"))
+
+
+info <- "This is general information on the country you selected
+\n the country is in the following alliance 
+\n and it is super interested in marine science"
+
+
+load("countries_net.R")
+
+countries_net <- countries_net %>% activate(nodes) %>% mutate(region = get_region(name))
+
+# countries_from_network <- countries_net %>% activate(nodes) %>% pull(name)
+# regions_from_network <- countries_net %>% activate(nodes) %>% pull(region)
+# 
+# current_region = regions_from_network[which(countries_from_network == country_name)]
+
 
 # test comment
-load("countries_net.R")
 
 default_background_color <- "#f5f5f2"
 
@@ -37,7 +101,8 @@ ui <- fluidPage(
   setBackgroundColor(default_background_color),
   
   
-  titlePanel('Marine Biodiversity Country Publications Dashboard'),
+  titlePanel('Marine Biodiversity Country Dashboard'),
+  
   
   sidebarPanel(  selectInput(inputId = "country",
                              label = "Choose a Country",
@@ -46,6 +111,8 @@ ui <- fluidPage(
   
   mainPanel(
     tabsetPanel(
+      
+      tabPanel("General Information", textOutput(outputId = "info")),
       
       tabPanel("Thematic Clusters",   plotOutput(outputId = "barchart_clusters"),
                plotOutput(outputId = "top_5_clusters")), 
@@ -61,13 +128,18 @@ ui <- fluidPage(
         visNetworkOutput("network",
                          height="1000px")),
       
-      tabPanel("Concepts from IR", tableOutput(outputId = "concepts")),
+      tabPanel("Concepts from Marine Scientific Research", tableOutput(outputId = "concepts")),
       
       tabPanel("Concepts in Negotiations", tableOutput(outputId = "concepts2")),
       
+      tabPanel("Participants in Negotiations", tableOutput(outputId = "participants")),
+      
       tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj")),
       
-      tabPanel("BBNJ Talk Time by Package", plotOutput(outputId = "time"))
+      tabPanel("BBNJ Talk Time by Package", plotOutput(outputId = "time")),
+      
+      tabPanel("Negotiation Reference Network", 
+               visNetworkOutput("refnetwork", height = "1000px"))
     )
   )
   
@@ -76,11 +148,13 @@ ui <- fluidPage(
 
 server <- function(input, output, session){
   
+  output$info <- renderText({info})
+  
   output$barchart_clusters <- renderPlot({
     
-
+    
     country_name <- input$country
-
+    
     regional_dist <- data %>%
       filter(country_fa == country_name) %>%
       mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
@@ -170,30 +244,30 @@ server <- function(input, output, session){
   
   output$top_collab <- renderTable({
     
-  country_name <- tolower(input$country)
-  
-  
-  countries_net %>%
-    activate(nodes) %>%
-    as_data_frame() %>%
-    mutate(has_country = ifelse(from == country_name | to == country_name, 1, 0)) %>%
-    filter(has_country == 1) %>%
-    mutate(from_new = ifelse(to == country_name, to, from),
-           to_new = ifelse(to == country_name, from, to)) %>%
-    group_by(to_new) %>%
-    count() %>%
-    ungroup() %>%
-    mutate(n_total = sum(n),
-           percent_collab = (n/n_total) * 100) %>%
-    arrange(desc(percent_collab)) %>%
-    top_n(10)  %>%
-    select(-n, n_total) %>%
-    transmute(`Collaboration With` = to_new, `Percent of Collaboration` = percent_collab) %>%
-    mutate(`Collaboration With` = ifelse(`Collaboration With` == 'usa' | `Collaboration With` == 'uk',
-                                         toupper(`Collaboration With`), str_to_title(`Collaboration With`)),
-           `Percent of Collaboration` = paste0(round(`Percent of Collaboration`, 2), "%"))
-  
-  
+    country_name <- tolower(input$country)
+    
+    
+    countries_net %>%
+      activate(nodes) %>%
+      as_data_frame() %>%
+      mutate(has_country = ifelse(from == country_name | to == country_name, 1, 0)) %>%
+      filter(has_country == 1) %>%
+      mutate(from_new = ifelse(to == country_name, to, from),
+             to_new = ifelse(to == country_name, from, to)) %>%
+      group_by(to_new) %>%
+      count() %>%
+      ungroup() %>%
+      mutate(n_total = sum(n),
+             percent_collab = (n/n_total) * 100) %>%
+      arrange(desc(percent_collab)) %>%
+      top_n(10)  %>%
+      select(-n, n_total) %>%
+      transmute(`Collaboration With` = to_new, `Percent of Collaboration` = percent_collab) %>%
+      mutate(`Collaboration With` = ifelse(`Collaboration With` == 'usa' | `Collaboration With` == 'uk',
+                                           toupper(`Collaboration With`), str_to_title(`Collaboration With`)),
+             `Percent of Collaboration` = paste0(round(`Percent of Collaboration`, 2), "%"))
+    
+    
   })
   
   
@@ -326,6 +400,19 @@ server <- function(input, output, session){
     
   })
   
+  output$participants <- renderTable({
+    country_name <- str_to_lower(input$country)
+    
+    bbnj %>% filter(actor == country_name) %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
+                                                      participants_BBNJ_igc3, participants_CBD_cop18) %>%
+      transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
+                `Participants in BBNJ IGC 2` = participants_BBNJ_igc2,
+                `Participants in BBNJ IGC 3` = participants_BBNJ_igc3,
+                `Participants in CBD COP 2018` = participants_CBD_cop18)
+    
+  })
+  
+  
   
   output$concepts2 <- renderTable({
     
@@ -344,8 +431,8 @@ server <- function(input, output, session){
                   `Times Occuring`= n) %>% 
         ungroup() %>%
         select(-concept)}
-
-
+    
+    
     
   })
   
@@ -377,7 +464,7 @@ server <- function(input, output, session){
       par(mar = c(0,0,0,0),
           bg = default_background_color)
       plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-      text(x = 0.5, y = 0.5, paste("Ther is no data for", str_to_title(country_name)), 
+      text(x = 0.5, y = 0.5, paste("There is no data for", str_to_title(country_name)), 
            cex = 1.6, col = "black",
            bg = "blue")
       
@@ -385,41 +472,79 @@ server <- function(input, output, session){
     } else {
       
       bbnj_output %>%
-      select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
-      prop.table() %>% 
-      as_tibble() %>%
-      transmute(
-        MGR  = talk_time_MGR,
-        ABMT = talk_time_ABMT,
-        EIA  = talk_time_EIA,
-        CBTT = talk_time_CBTT,
-        Crosscutting = talk_time_crosscutting
-      ) %>%
-      gather(Package, Time, MGR:Crosscutting) %>% 
-      ggplot() + 
-      geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
-      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
-      ylab("% of Speaking Time") +
-      theme_tufte() +
-      theme(
-        plot.title = element_text(hjust = .5, size = 20),
-        axis.title.x = element_text(size = 15),
-        axis.text.x = element_text(size = 15),
-        axis.text.y = element_text(size = 15),
-        axis.title.y = element_text(size = 15),
-        legend.text = element_text(size = 13),
-        plot.background = element_rect(fill = default_background_color,
-                                       color = NA),
-        panel.background = element_rect(fill = default_background_color,
-                                        color = NA),
-        legend.background = element_rect(fill = default_background_color,
-                                         color = NA))
+        select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
+        prop.table() %>% 
+        as_tibble() %>%
+        transmute(
+          MGR  = talk_time_MGR,
+          ABMT = talk_time_ABMT,
+          EIA  = talk_time_EIA,
+          CBTT = talk_time_CBTT,
+          Crosscutting = talk_time_crosscutting
+        ) %>%
+        gather(Package, Time, MGR:Crosscutting) %>% 
+        ggplot() + 
+        geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
+        scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
+        ylab("% of Speaking Time") +
+        theme_tufte() +
+        theme(
+          plot.title = element_text(hjust = .5, size = 20),
+          axis.title.x = element_text(size = 15),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          axis.title.y = element_text(size = 15),
+          legend.text = element_text(size = 13),
+          plot.background = element_rect(fill = default_background_color,
+                                         color = NA),
+          panel.background = element_rect(fill = default_background_color,
+                                          color = NA),
+          legend.background = element_rect(fill = default_background_color,
+                                           color = NA))
     }
     
     
   })
   
   
+  output$refnetwork <- renderVisNetwork({  
+    
+    country_name <- str_to_lower(input$country)
+    
+    
+    
+    cnet <- as.matrix(cnet)
+    
+    rownames(cnet) <- NULL
+    rownames(cnet) <- colnames(cnet)
+    
+    
+    diag(cnet) <- 0
+    
+    net <- graph_from_adjacency_matrix(cnet, weighted = TRUE,
+                                       mode = "undirected")
+    
+    degree(net)[degree(net) == 0]
+    
+    net <- simplify(net, remove.loops = TRUE)
+    Isolated = which(degree(net)==0)
+    net = delete.vertices(net, Isolated)
+    
+    
+    my_colors <- rep("#4885C1", length(V(net)))
+    my_colors[which(V(net)$name == country_name)] <- "#AE3A4E"
+    
+    V(net)$color <- my_colors
+    
+    
+    data <- toVisNetworkData(net)
+    
+    plot <- visNetwork(nodes = data$nodes, edges = data$edges, height = "1000px", width = "100%") %>% 
+      visIgraphLayout()  
+    
+    
+    visIgraph(net)
+  })  
   
   
 }
