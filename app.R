@@ -116,7 +116,15 @@ ui <- fluidPage(
                              label = "Choose a Country",
                              selected = "USA",
                              choices = sort(unique(data$country_fa))),
-                 tabPanel("Manual", textOutput(outputId = "manual"))),
+                 tabPanel("Manual", textOutput(outputId = "manual")),
+                 
+                 
+                 
+                 checkboxInput("compare_country_check", "Do you want to compare with\n another country?", value = FALSE),
+                 uiOutput("compare_country") # checkbox to see if the user wants another country to compare
+                 ),
+  
+
   
   ### can you divide this in two main panels "Marine Biodiversity Research Data" & 
   #  "BBNJ Negotiation Data" and then the existing panels as sub-panels?
@@ -128,8 +136,10 @@ ui <- fluidPage(
       
       tabPanel("Investment in Research", plotOutput(outputId = "rd_invest")),
       
-      tabPanel("Thematic Clusters",   plotOutput(outputId = "barchart_clusters"),
-               plotOutput(outputId = "top_5_clusters")), 
+      tabPanel("Thematic Clusters", plotOutput(outputId = "barchart_clusters"),
+               plotOutput(outputId = "barchart_clusters_compare"),
+               plotOutput(outputId = "top_5_clusters"),
+               plotOutput(outputId = "top_5_clusters_compare")), 
       
       tabPanel("International Collaboration", tableOutput(outputId = "top_collab")), 
       
@@ -166,6 +176,20 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session){
+  
+  
+  
+  output$compare_country <- 
+    renderUI({
+      req(input$compare_country_check)
+      selectInput(inputId = "compare_country",
+                  label = "Choose a Country for Comparison",
+                  selected = "USA",
+                  choices = sort(unique(data$country_fa)))
+    })
+  
+  
+  
   
   output$manual <- renderText({
     
@@ -266,6 +290,47 @@ output$rd_invest <- renderPlot({
     
   })
   
+  
+  output$barchart_clusters_compare <- renderPlot({
+    
+    req(input$compare_country_check)
+    
+    country_name <- input$compare_country
+    
+    regional_dist <- data %>%
+      filter(country_fa == country_name) %>%
+      mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
+      group_by(cluster_70_names) %>%
+      count() %>%
+      ungroup() %>%
+      mutate(rel_freq = n / sum(n)) %>%
+      ggplot() +
+      geom_bar(aes(x = reorder(cluster_70_names, rel_freq), rel_freq), stat = 'identity',
+               fill = 'steelblue') +
+      ylab(paste0('Relative Frequency of Clusters')) +
+      ggtitle(country_name) +
+      xlab(NULL) +
+      theme_tufte() +
+      theme(
+        plot.title = element_text(hjust = .5, size = 20),
+        axis.title.x = element_text(size = 15),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA),
+        panel.background = element_rect(fill = default_background_color,
+                                        color = NA),
+        legend.background = element_rect(fill = default_background_color,
+                                         color = NA)) +
+      coord_flip() +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1))
+    
+    
+    regional_dist
+    
+    
+  })
+  
   output$top_5_clusters <- renderPlot({
     
     country_name <- input$country
@@ -307,15 +372,69 @@ output$rd_invest <- renderPlot({
         legend.background = element_rect(fill = default_background_color,
                                          color = NA)) +
       ylab("Number of Articles") +
-      ggtitle(paste0('Top 5 Cluster Over Time')) +
+      ggtitle(paste0(country_name, ' Top 5 Cluster Over Time')) +
       theme(legend.title = element_blank(),
             axis.title.x = element_blank()) +
       scale_color_brewer(type = 'qual', palette = 2)
     p
     
     
+
     
   })
+  
+  
+output$top_5_clusters_compare <- renderPlot({
+  
+  req(input$compare_country_check)
+  
+  country_name <- input$compare_country
+  
+  
+  top_5 <- data %>%
+    filter(country_fa == country_name) %>%
+    group_by(cluster_70_names) %>%
+    count() %>%
+    arrange(-n) %>%
+    ungroup() %>%
+    top_n(5) %>%
+    select(cluster_70_names)
+  
+  
+  
+  p_compare <- data %>%
+    filter(cluster_70_names %in% top_5$cluster_70_names) %>%
+    mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
+    group_by(PY, cluster_70_names) %>%
+    count() %>%
+    group_by(cluster_70_names) %>%
+    mutate(cumulative = n) %>%
+    ggplot() +
+    geom_line(aes(PY, cumulative, color = factor(cluster_70_names)),
+              size = 2) +
+    theme_tufte() +
+    theme(
+      plot.title = element_text(hjust = .5, size = 20),
+      axis.title.x = element_text(size = 15),
+      axis.text.x = element_text(size = 15),
+      axis.text.y = element_text(size = 15),
+      axis.title.y = element_text(size = 15),
+      legend.text = element_text(size = 13),
+      plot.background = element_rect(fill = default_background_color,
+                                     color = NA),
+      panel.background = element_rect(fill = default_background_color,
+                                      color = NA),
+      legend.background = element_rect(fill = default_background_color,
+                                       color = NA)) +
+    ylab("Number of Articles") +
+    ggtitle(paste0(country_name, ' Top 5 Cluster Over Time')) +
+    theme(legend.title = element_blank(),
+          axis.title.x = element_blank()) +
+    scale_color_brewer(type = 'qual', palette = 2)
+  p_compare
+  
+  
+})
   
   
   
