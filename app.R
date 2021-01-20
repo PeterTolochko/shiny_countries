@@ -3,7 +3,7 @@
 # list.of.packages <- c("tidyverse", "ggthemes", "tidygraph",
 #                       "shinyWidgets", "DescTools",
 #                       "scales", "shiny", "igraph", "ggthemes",
-#                       "widyr", "visNetwork", "RColorBrewer", "tidytext", "countrycode")
+#                       "widyr", "visNetwork", "RColorBrewer", "tidytext", "countrycode", "shinythemes)
 # new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 # if(length(new.packages)>0) {install.packages(new.packages)}
 
@@ -25,7 +25,7 @@ require(countrycode)
 library(readxl)
 library(cowplot)
 require(gridExtra)
-
+require(shinythemes)
 
 world_regions <- tribble(
   ~small, ~large,
@@ -199,6 +199,9 @@ default_background_color <- "#f5f5f2"
 
 
 ui <- fluidPage(
+  
+  # theme = shinytheme("superhero"),
+  
   setBackgroundColor(default_background_color),
   
   sidebarLayout(
@@ -217,7 +220,7 @@ ui <- fluidPage(
     
     
     
-    mainPanel(navbarPage(title = "Sidebar Menu",
+    mainPanel(navbarPage(title = "Sidebar",
               
                          
                          
