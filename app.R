@@ -22,7 +22,8 @@ require(RColorBrewer)
 require(DescTools)
 require(shiny)
 require(countrycode)
-
+library(readxl)
+library(cowplot)
 
 
 
@@ -69,21 +70,28 @@ get_region <- function(country) {
 
 
 data <- read_csv("shiny_data.gz")
+# add EU 
+data <- data %>% add_row(country_fa = "Eu")
+#
 bbnj <- read_csv("states.csv")
 concepts_bbnj <- read_csv("concept_count.csv")
 cnet <- read_csv("cnet.csv")
-
 cnet <- cnet %>% select(-c("X1"))
 
+research <- read_excel("research.xlsx")
 
-info <- "This is general information on the country you selected
-\n the country is in the following alliance 
-\n and it is super interested in marine science"
+manual <- "This MARIPOLDATA Marine Biodiversity Dashboard 
+serves to inform about international marine biodiversity 
+research and politics. By selecting the respective tab, 
+it is possible to access per country information on about
+marine biodiversity research and indicators on its position in the
+BBNJ negotiations." 
 
 
 load("countries_net.R")
 
 countries_net <- countries_net %>% activate(nodes) %>% mutate(region = get_region(name))
+
 
 # countries_from_network <- countries_net %>% activate(nodes) %>% pull(name)
 # regions_from_network <- countries_net %>% activate(nodes) %>% pull(region)
@@ -107,12 +115,18 @@ ui <- fluidPage(
   sidebarPanel(  selectInput(inputId = "country",
                              label = "Choose a Country",
                              selected = "USA",
-                             choices = sort(unique(data$country_fa)))),
+                             choices = sort(unique(data$country_fa))),
+                 tabPanel("Manual", textOutput(outputId = "manual"))),
   
+  ### can you divide this in two main panels "Marine Biodiversity Research Data" & 
+  #  "BBNJ Negotiation Data" and then the existing panels as sub-panels?
   mainPanel(
     tabsetPanel(
       
-      tabPanel("General Information", textOutput(outputId = "info")),
+      
+      tabPanel("General Information on Research", htmlOutput(outputId = "info1")),
+      
+      tabPanel("Investment in Research", plotOutput(outputId = "rd_invest")),
       
       tabPanel("Thematic Clusters",   plotOutput(outputId = "barchart_clusters"),
                plotOutput(outputId = "top_5_clusters")), 
@@ -128,13 +142,18 @@ ui <- fluidPage(
         visNetworkOutput("network",
                          height="1000px")),
       
-      tabPanel("Concepts from Marine Scientific Research", tableOutput(outputId = "concepts")),
+      tabPanel("Concepts from Marine Scientific Research", tableOutput(outputId = "concepts"))
+    ),
+    tabsetPanel(      
+      tabPanel("General Information on BBNJ Negotiations", textOutput(outputId = "info2")),
       
       tabPanel("Concepts in Negotiations", tableOutput(outputId = "concepts2")),
       
       tabPanel("Participants in Negotiations", tableOutput(outputId = "participants")),
       
-      tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj")),
+      #tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj")),
+      
+      tabPanel("BBNJ References to Science", tableOutput(outputId = "scienceref")),
       
       tabPanel("BBNJ Talk Time by Package", plotOutput(outputId = "time")),
       
@@ -148,7 +167,65 @@ ui <- fluidPage(
 
 server <- function(input, output, session){
   
-  output$info <- renderText({info})
+  output$manual <- renderText({
+    
+print(manual)
+  })
+  
+  
+  output$info1 <- renderUI({
+    
+    country_name <- str_to_lower(input$country)
+    
+    intemediate <- research %>% filter(actor == country_name) %>% 
+      select(text_science) %>% print(text_science, sep="<br/>")
+    
+    if (is.na(intemediate$text_science)) {
+      print("info")
+    } else {print(intemediate$text_science)}
+  })
+  
+  output$info2 <- renderText({
+    
+    country_name <- str_to_lower(input$country)
+    
+    intemediate <- research %>% filter(actor == country_name) %>% 
+      select(text_bbnj)
+    
+    if (is.na(intemediate$text_bbnj)) {
+      print("info")
+    } else {print(intemediate$text_bbnj)}
+  })
+  
+output$rd_invest <- renderPlot({
+    
+    country_name <- str_to_lower(input$country)
+    
+    
+ total <- bbnj %>% filter(actor == country_name) %>% 
+    select( `2015_expenditure_rd`, `2016_expenditure_rd`,
+            `2017_expenditure_rd`, `2018_expenditure_rd`,
+            `2019_expenditure_rd`) %>% 
+    gather(year,rd_expenditure) %>% 
+    ggplot() +
+    geom_bar(aes(x = year, y = rd_expenditure), stat = 'identity', fill = 'steelblue') +
+    ggtitle(country_name) 
+  
+  
+ percapita <- bbnj %>% filter(actor == country_name) %>% 
+    select( `2015_expenditure_rd_pc`, `2016_expenditure_rd_pc`,
+            `2017_expenditure_rd_pc`, `2018_expenditure_rd_pc`,
+            `2019_expenditure_rd_pc`) %>% 
+    gather(year,rd_expenditure_percapita) %>% 
+    ggplot() +
+    geom_bar(aes(x = year, y = rd_expenditure_percapita), stat = 'identity', fill = 'steelblue')+
+    ggtitle(country_name) 
+ 
+ plot_grid(total, percapita,labels = c("Total Research Investment", "Per Capita Research Investment"))
+  
+  })  
+  
+  
   
   output$barchart_clusters <- renderPlot({
     
@@ -400,6 +477,7 @@ server <- function(input, output, session){
     
   })
   
+  
   output$participants <- renderTable({
     country_name <- str_to_lower(input$country)
     
@@ -437,20 +515,72 @@ server <- function(input, output, session){
   })
   
   
-  output$bbnj <- renderTable({
-    
+  # output$bbnj <- renderTable({
+  #   
+  #   country_name <- str_to_lower(input$country)
+  #   
+  #   bbnj %>% filter(actor == country_name) %>%
+  #     select(agg_frq_sci, agg_total_time) %>%
+  #     mutate(agg_frq_sci = ifelse(is.na(agg_frq_sci), "No Data Available", as.integer(agg_frq_sci)),
+  #            agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
+  #                                    paste0(round(agg_total_time/60, 2), " Minutes"))) %>%
+  #     transmute(`References to Science` = agg_frq_sci,
+  #               `Total Speaking Time` = agg_total_time)
+  #   
+  #   
+  #   
+  # })
+  
+  output$scienceref <- renderTable({
     country_name <- str_to_lower(input$country)
     
-    bbnj %>% filter(actor == country_name) %>%
-      select(frq_sci, total_time) %>%
-      mutate(frq_sci = ifelse(is.na(frq_sci), "No Data Available", as.integer(frq_sci)),
-             total_time = ifelse(is.na(total_time), "No Data Available",
-                                 paste0(round(total_time/60, 2), " Minutes"))) %>%
-      transmute(`References to Science` = frq_sci,
-                `Total Speaking Time` = total_time)
+    table.title <- bbnj %>% filter(actor == country_name) %>%
+      select(agg_frq_sci) %>%
+      mutate(agg_frq_sci = ifelse(is.na(agg_frq_sci), "No Data Available", as.integer(agg_frq_sci)))
+    table.title <- table.title$agg_frq_sci
+
+    my_table <- bbnj %>% filter(actor == country_name) %>%
+      select(sci_fr_igc1_MGR,
+             sci_fr_igc1_ABMT,
+             sci_fr_igc1_EIA,
+             sci_fr_igc1_CBTT,
+             sci_fr_igc1_crosscutting,
+        sci_fr_igc2_MGR,
+             sci_fr_igc2_ABMT,
+             sci_fr_igc2_EIA,
+             sci_fr_igc2_CBTT,
+             sci_fr_igc2_crosscutting,
+             sci_fr_igc3_MGR, 
+             sci_fr_igc3_ABMT,
+             sci_fr_igc3_EIA,
+             sci_fr_igc3_CBTT,
+             sci_fr_igc3_crosscutting) %>% 
+      transmute(`References to Science IGC 1 MGRs` = sci_fr_igc1_MGR,
+                `References to Science IGC 1 ABMTs` = sci_fr_igc1_ABMT,
+                `References to Science IGC 1 EIAs` = sci_fr_igc1_EIA,
+                `References to Science IGC 1 CBTT` = sci_fr_igc1_CBTT, 
+                `References to Science IGC 1 Crosscutting` = sci_fr_igc1_crosscutting,
+        `References to Science IGC 2 MGRs` = sci_fr_igc2_MGR,
+                `References to Science IGC 2 ABMTs` = sci_fr_igc2_ABMT,
+                `References to Science IGC 2 EIAs` = sci_fr_igc2_EIA,
+                `References to Science IGC 2 CBTT` = sci_fr_igc2_CBTT, 
+                `References to Science IGC 2 Crosscutting` = sci_fr_igc2_crosscutting,
+                `References to Science IGC 3 MGRs` = sci_fr_igc3_MGR,
+              `References to Science IGC 3 ABMTs` = sci_fr_igc3_ABMT,
+              `References to Science IGC 3 EIAs` = sci_fr_igc3_EIA,
+              `References to Science IGC 3 CBTT` = sci_fr_igc3_CBTT, 
+              `References to Science IGC 3 Crosscutting` = sci_fr_igc3_crosscutting) %>% 
+      as.tibble() 
     
     
-  })
+
+    pivot_longer(my_table, cols = starts_with("References to Science IGC")) %>%
+      rowwise() %>%
+      mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+             Package = str_split(name, " ")[[1]][6]) %>%
+      pivot_wider(id_cols = IGC,
+                  names_from = Package)
+    }, caption.placement = "top")
   
   
   output$time <- renderPlot({
@@ -459,12 +589,19 @@ server <- function(input, output, session){
     
     bbnj_output <- bbnj %>% filter(actor == country_name)
     
+    plot.title <- bbnj_output %>% 
+      select(agg_total_time) %>%
+      mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
+                                     paste0("Total Speaking Time: ", round(agg_total_time/60, 2), " Minutes")))
+    
+    
+    
     if (dim(bbnj_output)[1] == 0) {
       
       par(mar = c(0,0,0,0),
           bg = default_background_color)
       plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-      text(x = 0.5, y = 0.5, paste("There is no data for", str_to_title(country_name)), 
+      text(x = 0.5, y = 0.5, paste("No Data Available"), 
            cex = 1.6, col = "black",
            bg = "blue")
       
@@ -487,6 +624,7 @@ server <- function(input, output, session){
         geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
         scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
         ylab("% of Speaking Time") +
+        ggtitle(plot.title) +
         theme_tufte() +
         theme(
           plot.title = element_text(hjust = .5, size = 20),
