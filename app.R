@@ -505,7 +505,7 @@ top_5_clusters_compare <- reactive({
       select(text_science) %>% print(text_science, sep="<br/>")
     
     if (is.na(intemediate$text_science)) {
-      print("info")
+      print("For this country we do not have specific info yet")
     } else {print(intemediate$text_science)}
   })
   
@@ -517,7 +517,7 @@ top_5_clusters_compare <- reactive({
       select(text_bbnj)
     
     if (is.na(intemediate$text_bbnj)) {
-      print("info")
+      print("For this country we do not have specific info yet")
     } else {print(intemediate$text_bbnj)}
   })
   
