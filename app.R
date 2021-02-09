@@ -1086,12 +1086,7 @@ output$rd_invest <- renderPlot({
       mutate(total_time = ifelse(is.na(total_time), "",
                                  paste0("Total Speaking Time: ", round(total_time/60, 2), " Minutes")))
     
-    plot.title_2 <- bbnj_output %>% 
-      select(agg_total_time) %>%
-      mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
-                                     paste0("Total Speaking Time ", bbnj_output$member_alliance,": ", round(agg_total_time/60, 2), " Minutes")))
-    
-    
+  
     
     first <- if (is.na(bbnj_output$total_time)) {
       
@@ -1140,6 +1135,11 @@ output$rd_invest <- renderPlot({
     
     bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
     bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
+    
+    plot.title_2 <- bbnj_output_2 %>% 
+      select(agg_total_time) %>%
+      mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
+                                     paste0("Total Speaking Time ", bbnj_output$member_alliance,": ", round(agg_total_time/60, 2), " Minutes")))
     
     
 
