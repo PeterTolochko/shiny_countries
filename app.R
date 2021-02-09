@@ -26,6 +26,7 @@ library(readxl)
 library(cowplot)
 require(gridExtra)
 require(shinythemes)
+require(kableExtra)
 
 world_regions <- tribble(
   ~small, ~large,
@@ -828,7 +829,7 @@ output$rd_invest <- renderPlot({
     
   })
   
-  
+  ### no fokin clue why it doesnt arrange your shitdata. it works outside the shinyapp...
   output$concepts_compare <- renderTable({
     
     req(input$compare_country_check)
@@ -885,14 +886,15 @@ output$rd_invest <- renderPlot({
     )
     
     concepts$concepts <- list_concepts
+    concepts$value <- as.numeric(concepts$value)
     
-    
-    
+
     if (dim(concepts)[2] == 1) {
       print(paste0("No Concepts in ", current_country, "'s ", "Data"))
     } else {concepts %>%
         filter(value != 0) %>%
-        transmute(Concepts = concepts, `Times Occuring` = value)}
+        transmute(Concepts = concepts, `Times Occuring` = value) %>% 
+        arrange(desc(`Times Occuring`))}
     
     
   })
@@ -908,7 +910,7 @@ output$rd_invest <- renderPlot({
                 `Participants in BBNJ IGC 3` = participants_BBNJ_igc3,
                 `Participants in CBD COP 2018` = participants_CBD_cop18)
     
-  })
+  }, digits = 0)
   
   
   
@@ -927,12 +929,12 @@ output$rd_invest <- renderPlot({
     } else {out_concept_bbnj %>%
         transmute(Concept = str_to_title(concept),
                   `Times Occuring`= n) %>% 
-        ungroup() %>%
+        ungroup() %>% arrange(desc(`Times Occuring`)) %>%
         select(-concept)}
     
     
     
-  })
+  }, digits = 0)
   
   
   # output$bbnj <- renderTable({
@@ -951,57 +953,127 @@ output$rd_invest <- renderPlot({
   #   
   # })
   
+  
+  ## at the end of this shit chunk in line 1065 I try to plot/print or whatever both tables: first and second
   output$scienceref <- renderTable({
     country_name <- str_to_lower(input$country)
+    
+    bbnj_output <- bbnj %>% filter(actor == country_name)
+  
     
     table.title <- bbnj %>% filter(actor == country_name) %>%
       select(agg_frq_sci) %>%
       mutate(agg_frq_sci = ifelse(is.na(agg_frq_sci), "No Data Available", as.integer(agg_frq_sci)))
     table.title <- table.title$agg_frq_sci
 
-    my_table <- bbnj %>% filter(actor == country_name) %>%
-      select(sci_fr_igc1_MGR,
-             sci_fr_igc1_ABMT,
-             sci_fr_igc1_EIA,
-             sci_fr_igc1_CBTT,
-             sci_fr_igc1_crosscutting,
-        sci_fr_igc2_MGR,
-             sci_fr_igc2_ABMT,
-             sci_fr_igc2_EIA,
-             sci_fr_igc2_CBTT,
-             sci_fr_igc2_crosscutting,
-             sci_fr_igc3_MGR, 
-             sci_fr_igc3_ABMT,
-             sci_fr_igc3_EIA,
-             sci_fr_igc3_CBTT,
-             sci_fr_igc3_crosscutting) %>% 
-      transmute(`References to Science IGC 1 MGRs` = sci_fr_igc1_MGR,
-                `References to Science IGC 1 ABMTs` = sci_fr_igc1_ABMT,
-                `References to Science IGC 1 EIAs` = sci_fr_igc1_EIA,
-                `References to Science IGC 1 CBTT` = sci_fr_igc1_CBTT, 
-                `References to Science IGC 1 Crosscutting` = sci_fr_igc1_crosscutting,
-        `References to Science IGC 2 MGRs` = sci_fr_igc2_MGR,
-                `References to Science IGC 2 ABMTs` = sci_fr_igc2_ABMT,
-                `References to Science IGC 2 EIAs` = sci_fr_igc2_EIA,
-                `References to Science IGC 2 CBTT` = sci_fr_igc2_CBTT, 
-                `References to Science IGC 2 Crosscutting` = sci_fr_igc2_crosscutting,
-                `References to Science IGC 3 MGRs` = sci_fr_igc3_MGR,
-              `References to Science IGC 3 ABMTs` = sci_fr_igc3_ABMT,
-              `References to Science IGC 3 EIAs` = sci_fr_igc3_EIA,
-              `References to Science IGC 3 CBTT` = sci_fr_igc3_CBTT, 
-              `References to Science IGC 3 Crosscutting` = sci_fr_igc3_crosscutting) %>% 
-      as.tibble() 
+    first_table <-  if (is.na(bbnj_output$total_time)) {
+      
+      paste0("No data available for this country, please look at its alliance: ", str_to_upper(bbnj_output$member_alliance))
+      
+    } else {
+      
+      my_table_1 <- bbnj_output %>%
+        select(sci_fr_igc1_MGR,
+               sci_fr_igc1_ABMT,
+               sci_fr_igc1_EIA,
+               sci_fr_igc1_CBTT,
+               sci_fr_igc1_crosscutting,
+               sci_fr_igc2_MGR,
+               sci_fr_igc2_ABMT,
+               sci_fr_igc2_EIA,
+               sci_fr_igc2_CBTT,
+               sci_fr_igc2_crosscutting,
+               sci_fr_igc3_MGR, 
+               sci_fr_igc3_ABMT,
+               sci_fr_igc3_EIA,
+               sci_fr_igc3_CBTT,
+               sci_fr_igc3_crosscutting) %>% 
+        transmute(`References to Science IGC 1 MGRs` = sci_fr_igc1_MGR,
+                  `References to Science IGC 1 ABMTs` = sci_fr_igc1_ABMT,
+                  `References to Science IGC 1 EIAs` = sci_fr_igc1_EIA,
+                  `References to Science IGC 1 CBTT` = sci_fr_igc1_CBTT, 
+                  `References to Science IGC 1 Crosscutting` = sci_fr_igc1_crosscutting,
+                  `References to Science IGC 2 MGRs` = sci_fr_igc2_MGR,
+                  `References to Science IGC 2 ABMTs` = sci_fr_igc2_ABMT,
+                  `References to Science IGC 2 EIAs` = sci_fr_igc2_EIA,
+                  `References to Science IGC 2 CBTT` = sci_fr_igc2_CBTT, 
+                  `References to Science IGC 2 Crosscutting` = sci_fr_igc2_crosscutting,
+                  `References to Science IGC 3 MGRs` = sci_fr_igc3_MGR,
+                  `References to Science IGC 3 ABMTs` = sci_fr_igc3_ABMT,
+                  `References to Science IGC 3 EIAs` = sci_fr_igc3_EIA,
+                  `References to Science IGC 3 CBTT` = sci_fr_igc3_CBTT, 
+                  `References to Science IGC 3 Crosscutting` = sci_fr_igc3_crosscutting) %>% 
+        as.tibble() 
+      
+      
+      pivot_longer(my_table_1, cols = starts_with("References to Science IGC")) %>%
+        rowwise() %>%
+        mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+               Package = str_split(name, " ")[[1]][6]) %>%
+        pivot_wider(id_cols = IGC,
+                    names_from = Package)}
+    
+    bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
+    bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
+    
+    bbnj_output$alliance == bbnj_output$actor
     
     
-
-    pivot_longer(my_table, cols = starts_with("References to Science IGC")) %>%
-      rowwise() %>%
-      mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
-             Package = str_split(name, " ")[[1]][6]) %>%
-      pivot_wider(id_cols = IGC,
-                  names_from = Package)
-    }, caption.placement = "top")
+    second_table <- if (bbnj_output$alliance == bbnj_output$actor) {
+      
+      paste0("This country has no alliance data") 
+      
+    } else { 
+      my_table_2 <- bbnj_output_2 %>%
+        select(sci_fr_igc1_MGR,
+               sci_fr_igc1_ABMT,
+               sci_fr_igc1_EIA,
+               sci_fr_igc1_CBTT,
+               sci_fr_igc1_crosscutting,
+               sci_fr_igc2_MGR,
+               sci_fr_igc2_ABMT,
+               sci_fr_igc2_EIA,
+               sci_fr_igc2_CBTT,
+               sci_fr_igc2_crosscutting,
+               sci_fr_igc3_MGR, 
+               sci_fr_igc3_ABMT,
+               sci_fr_igc3_EIA,
+               sci_fr_igc3_CBTT,
+               sci_fr_igc3_crosscutting) %>% 
+        transmute(`References to Science IGC 1 MGRs` = format(round(sci_fr_igc1_MGR,0)),
+                  `References to Science IGC 1 ABMTs` = sci_fr_igc1_ABMT,
+                  `References to Science IGC 1 EIAs` = sci_fr_igc1_EIA,
+                  `References to Science IGC 1 CBTT` = sci_fr_igc1_CBTT, 
+                  `References to Science IGC 1 Crosscutting` = sci_fr_igc1_crosscutting,
+                  `References to Science IGC 2 MGRs` = sci_fr_igc2_MGR,
+                  `References to Science IGC 2 ABMTs` = sci_fr_igc2_ABMT,
+                  `References to Science IGC 2 EIAs` = sci_fr_igc2_EIA,
+                  `References to Science IGC 2 CBTT` = sci_fr_igc2_CBTT, 
+                  `References to Science IGC 2 Crosscutting` = sci_fr_igc2_crosscutting,
+                  `References to Science IGC 3 MGRs` = sci_fr_igc3_MGR,
+                  `References to Science IGC 3 ABMTs` = sci_fr_igc3_ABMT,
+                  `References to Science IGC 3 EIAs` = sci_fr_igc3_EIA,
+                  `References to Science IGC 3 CBTT` = sci_fr_igc3_CBTT, 
+                  `References to Science IGC 3 Crosscutting` = sci_fr_igc3_crosscutting) %>% 
+        as.tibble() 
+      
+      
+      pivot_longer(my_table_2, cols = starts_with("References to Science IGC")) %>%
+        rowwise() %>%
+        mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+               Package = str_split(name, " ")[[1]][6]) %>%
+        pivot_wider(id_cols = IGC,
+                    names_from = Package)}
+    print(first_table)
+    # kable(first_table) %>% kable_styling(full_width = FALSE, position = "float_left")
+    # kable(second_table) %>% kable_styling(full_width = FALSE, position = "left")
+  }, digits = 0)
   
+  
+  
+  
+  
+  ### here it should plot the text as "first" but it doesnt
   
   output$time <- renderPlot({
     
@@ -1021,13 +1093,12 @@ output$rd_invest <- renderPlot({
     
     
     
-    
     first <- if (is.na(bbnj_output$total_time)) {
       
       par(mar = c(0,0,0,0),
           bg = default_background_color)
       plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-      text(x = 0.5, y = 0.5, paste0("No data available for this country, please look at its alliance:", bbnj_output$member_alliance), 
+      text(x = 0.5, y = 0.5, paste0("No data available for this country, please look at its alliance: ", bbnj_output$member_alliance), 
            cex = 1.6, col = "black",
            bg = "blue")
       
