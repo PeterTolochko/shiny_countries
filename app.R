@@ -504,8 +504,8 @@ top_5_clusters_compare <- reactive({
     intemediate <- research %>% filter(actor == country_name) %>% 
       select(text_science) %>% print(text_science, sep="<br/>")
     
-    if (is.na(intemediate$text_science)) {
-      print("For this country we do not have specific info yet")
+    if (length(intemediate$text_science) == 0) {
+      print("For this country we do not have specific information yet")
     } else {print(intemediate$text_science)}
   })
   
@@ -516,8 +516,8 @@ top_5_clusters_compare <- reactive({
     intemediate <- research %>% filter(actor == country_name) %>% 
       select(text_bbnj)
     
-    if (is.na(intemediate$text_bbnj)) {
-      print("For this country we do not have specific info yet")
+    if (length(intemediate$text_bbnj) == 0) {
+      print("For this country we do not have specific information yet")
     } else {print(intemediate$text_bbnj)}
   })
   
@@ -1009,22 +1009,27 @@ output$rd_invest <- renderPlot({
     
     bbnj_output <- bbnj %>% filter(actor == country_name)
     
-    plot.title <- bbnj_output %>% 
+    plot.title_1 <- bbnj_output %>% 
+      select(total_time) %>%
+      mutate(total_time = ifelse(is.na(total_time), "",
+                                 paste0("Total Speaking Time: ", round(total_time/60, 2), " Minutes")))
+    
+    plot.title_2 <- bbnj_output %>% 
       select(agg_total_time) %>%
       mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
-                                     paste0("Total Speaking Time: ", round(agg_total_time/60, 2), " Minutes")))
+                                     paste0("Total Speaking Time ", bbnj_output$member_alliance,": ", round(agg_total_time/60, 2), " Minutes")))
     
     
     
-    if (dim(bbnj_output)[1] == 0) {
+    
+    first <- if (is.na(bbnj_output$total_time)) {
       
       par(mar = c(0,0,0,0),
           bg = default_background_color)
       plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-      text(x = 0.5, y = 0.5, paste("No Data Available"), 
+      text(x = 0.5, y = 0.5, paste0("No data available for this country, please look at its alliance:", bbnj_output$member_alliance), 
            cex = 1.6, col = "black",
            bg = "blue")
-      
       
     } else {
       
@@ -1044,7 +1049,7 @@ output$rd_invest <- renderPlot({
         geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
         scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
         ylab("% of Speaking Time") +
-        ggtitle(plot.title) +
+        ggtitle(plot.title_1) +
         theme_tufte() +
         theme(
           plot.title = element_text(hjust = .5, size = 20),
@@ -1060,6 +1065,61 @@ output$rd_invest <- renderPlot({
           legend.background = element_rect(fill = default_background_color,
                                            color = NA))
     }
+    
+    
+    bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
+    bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
+    
+    
+
+    second <- if (bbnj_output$alliance == bbnj_output$actor) {
+      par(mar = c(0,0,0,0),
+          bg = default_background_color)
+      plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
+      text(x = 0.5, y = 0.5, paste("No data available for this country"), 
+           cex = 1.6, col = "black",
+           bg = "blue")
+      
+    } else {
+      
+
+      bbnj_output_2 %>%
+        select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
+        prop.table() %>% 
+        as_tibble() %>%
+        transmute(
+          MGR  = talk_time_MGR,
+          ABMT = talk_time_ABMT,
+          EIA  = talk_time_EIA,
+          CBTT = talk_time_CBTT,
+          Crosscutting = talk_time_crosscutting
+        ) %>%
+        gather(Package, Time, MGR:Crosscutting) %>% 
+        ggplot() + 
+        geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
+        scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
+        ylab("% of Speaking Time") +
+        ggtitle(plot.title_2) +
+        theme_tufte() +
+        theme(
+          plot.title = element_text(hjust = .5, size = 20),
+          axis.title.x = element_text(size = 15),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          axis.title.y = element_text(size = 15),
+          legend.text = element_text(size = 13),
+          plot.background = element_rect(fill = default_background_color,
+                                         color = NA),
+          panel.background = element_rect(fill = default_background_color,
+                                          color = NA),
+          legend.background = element_rect(fill = default_background_color,
+                                           color = NA))
+      
+      
+    }
+    
+    
+    plot_grid(first, second)
     
     
   })
