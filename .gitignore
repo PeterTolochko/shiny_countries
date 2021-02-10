@@ -3,5 +3,6 @@ countries.r
 shiny_data.csv
 .DS_store
 .Rhistory
+.RData
 bbnj_states.xlsx
 rsconnect

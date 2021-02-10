@@ -27,6 +27,13 @@ library(cowplot)
 require(gridExtra)
 require(shinythemes)
 require(kableExtra)
+library(png)
+
+
+default_background_color <- "#f5f5f2"
+
+
+
 
 world_regions <- tribble(
   ~small, ~large,
@@ -94,6 +101,41 @@ load("countries_net.R")
 countries_net <- countries_net %>% activate(nodes) %>% mutate(region = get_region(name))
 
 
+
+### Renaming some incosistently named countries in the bbnj dataset ###
+### Could require more manual inspection                            ###
+
+bbnj$actor[which(bbnj$actor == "russian federation")] <- "russia"
+bbnj$actor[which(bbnj$actor == "united kingdom")] <- "uk"
+bbnj$actor[which(bbnj$actor == "viet nam")] <- "vietnam"
+bbnj$actor[which(bbnj$actor == "syrian arabic republic")] <- "syria"
+bbnj$actor[which(bbnj$actor == "republic of korea")] <- "south korea"
+
+
+
+
+
+### agg_total_time is not present for some aliance (NA), therefore there is a problem
+### for the naming of the second plot (plot.title_2)
+
+
+### THIS IS PROBABLY WRONG!!! SHOULD BE DEALT WITH PROPERLY IN THE FUTURE ###
+
+
+bbnj <- bbnj %>%
+  mutate(agg_total_time = talk_time_MGR +
+           talk_time_ABMT +
+           talk_time_EIA +
+           talk_time_CBTT +
+           talk_time_crosscutting)
+
+#### 
+
+
+
+
+
+
 # countries_from_network <- countries_net %>% activate(nodes) %>% pull(name)
 # regions_from_network <- countries_net %>% activate(nodes) %>% pull(region)
 # 
@@ -102,7 +144,6 @@ countries_net <- countries_net %>% activate(nodes) %>% mutate(region = get_regio
 
 # test comment
 
-default_background_color <- "#f5f5f2"
 
 # 
 # 
@@ -196,8 +237,15 @@ default_background_color <- "#f5f5f2"
 #   )
 #   
 # )
+# 
+# title <- tags$a(href="https://www.maripoldata.eu",
+#                 tags$img(src='maripol.png', height='60', width='60'),
+#                 "Maripoldata")
 
 
+# column(width = 6, tags$img(src='maripol.png',height='60',width='200')),
+
+# tags$a(imageOutput("image1"),href="https://www.google.com"))
 
 ui <- fluidPage(
   
@@ -207,6 +255,9 @@ ui <- fluidPage(
   
   sidebarLayout(
     sidebarPanel(
+      tags$a(href="https://www.maripoldata.eu",
+                             tags$img(src='maripol.png', height='120', width='120'),
+                             "Maripoldata"),
       titlePanel('Marine Biodiversity Country Dashboard'),
           tabPanel("Manual", textOutput(outputId = "manual")),
 
@@ -281,13 +332,25 @@ ui <- fluidPage(
                        tabsetPanel(
                          tabPanel("General Information on BBNJ Negotiations", textOutput(outputId = "info2")),
                          
-                         tabPanel("Concepts in Negotiations", tableOutput(outputId = "concepts2")),
+                         tabPanel("Concepts in Negotiations",
+                                  fluidRow(
+                                    splitLayout(cellWidths = c("50%", "50%"), tableOutput("concepts2"), tableOutput("concepts2_compare"))
+                                  )),
                          
-                         tabPanel("Participants in Negotiations", tableOutput(outputId = "participants")),
+                         tabPanel("Participants in Negotiations",
+                                  fluidRow(
+                                    splitLayout(cellWidths = c("50%", "50%"), tableOutput("participants"), tableOutput("participants_compare"))
+                                  )),
                          
                          #tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj")),
                          
-                         tabPanel("BBNJ References to Science", tableOutput(outputId = "scienceref")),
+                         tabPanel("BBNJ References to Science",
+                           fluidRow(
+                             splitLayout(cellWidths = c("50%", "50%"), tableOutput("scienceref"), tableOutput("scienceref_compare"))
+                           ),
+                           fluidRow(
+                             splitLayout(cellWidths = c("50%", "50%"), tableOutput("scienceref_second"), tableOutput("scienceref_second_compare"))
+                           )),
                          
                          tabPanel("BBNJ Talk Time by Package", plotOutput(outputId = "time")),
                          
@@ -350,7 +413,6 @@ server <- function(input, output, session){
     scale_y_continuous(labels = scales::percent_format(accuracy = 1))
   
   
-  regional_dist
 })
 
 
@@ -388,7 +450,6 @@ server <- function(input, output, session){
     scale_y_continuous(labels = scales::percent_format(accuracy = 1))
   
   
-  regional_dist
 })
 
 
@@ -491,7 +552,11 @@ top_5_clusters_compare <- reactive({
   p_compare
 })
 
-  
+
+
+# Output ------------------------------------------------------------------
+
+
   
   output$manual <- renderText({
     print(manual)
@@ -522,7 +587,9 @@ top_5_clusters_compare <- reactive({
     } else {print(intemediate$text_bbnj)}
   })
   
-output$rd_invest <- renderPlot({
+  
+
+rd_invest <- reactive({
     
     country_name <- str_to_lower(input$country)
     
@@ -531,25 +598,153 @@ output$rd_invest <- renderPlot({
     select( `2015_expenditure_rd`, `2016_expenditure_rd`,
             `2017_expenditure_rd`, `2018_expenditure_rd`,
             `2019_expenditure_rd`) %>% 
+   mutate(`2015` = `2015_expenditure_rd`,
+          `2016` = `2016_expenditure_rd`,
+          `2017` = `2017_expenditure_rd`,
+          `2018` = `2018_expenditure_rd`,
+          `2019` = `2019_expenditure_rd`) %>%
+   select(!contains("_")) %>%
     gather(year,rd_expenditure) %>% 
     ggplot() +
     geom_bar(aes(x = year, y = rd_expenditure), stat = 'identity', fill = 'steelblue') +
-    ggtitle(country_name) 
+   theme_tufte() +
+   theme(
+     plot.title = element_text(size = 20),
+     axis.title.x = element_blank(),
+     axis.text.x = element_text(size = 15),
+     axis.text.y = element_text(size = 15),
+     axis.title.y = element_text(size = 15),
+     legend.text = element_text(size = 13),
+     plot.background = element_rect(fill = default_background_color,
+                                    color = NA),
+     panel.background = element_rect(fill = default_background_color,
+                                     color = NA),
+     legend.background = element_rect(fill = default_background_color,
+                                      color = NA)) +
+   ylab("R&D Expenditure")
   
   
  percapita <- bbnj %>% filter(actor == country_name) %>% 
     select( `2015_expenditure_rd_pc`, `2016_expenditure_rd_pc`,
             `2017_expenditure_rd_pc`, `2018_expenditure_rd_pc`,
             `2019_expenditure_rd_pc`) %>% 
+   mutate(`2015` = `2015_expenditure_rd_pc`,
+          `2016` = `2016_expenditure_rd_pc`,
+          `2017` = `2017_expenditure_rd_pc`,
+          `2018` = `2018_expenditure_rd_pc`,
+          `2019` = `2019_expenditure_rd_pc`) %>%
+   select(!contains("_")) %>%
     gather(year,rd_expenditure_percapita) %>% 
     ggplot() +
     geom_bar(aes(x = year, y = rd_expenditure_percapita), stat = 'identity', fill = 'steelblue')+
-    ggtitle(country_name) 
+   theme_tufte() +
+   theme(
+     plot.title = element_text(size = 20),
+     axis.title.x = element_blank(),
+     axis.text.x = element_text(size = 15),
+     axis.text.y = element_text(size = 15),
+     axis.title.y = element_text(size = 15),
+     legend.text = element_text(size = 13),
+     plot.background = element_rect(fill = default_background_color,
+                                    color = NA),
+     panel.background = element_rect(fill = default_background_color,
+                                     color = NA),
+     legend.background = element_rect(fill = default_background_color,
+                                      color = NA)) +
+   ylab("R&D Expenditure per Capita")
  
- plot_grid(total, percapita,labels = c("Total Research Investment", "Per Capita Research Investment"))
+ invest <- plot_grid(total, percapita,labels = c(paste0(str_to_title(country_name)," Total Research Investment"),
+                                       paste0(str_to_title(country_name), " Per Capita Research Investment")))
+ 
+ invest
   
-  })  
+  })
+
+
+rd_invest_compare <- reactive({
   
+  
+  if (!input$compare_country_check) return(NULL)
+  
+  country_name <- str_to_lower(input$compare_country)
+  
+  #country_name <- str_to_lower(input$country)
+  
+  
+  total <- bbnj %>% filter(actor == country_name) %>% 
+    select( `2015_expenditure_rd`, `2016_expenditure_rd`,
+            `2017_expenditure_rd`, `2018_expenditure_rd`,
+            `2019_expenditure_rd`) %>% 
+    mutate(`2015` = `2015_expenditure_rd`,
+           `2016` = `2016_expenditure_rd`,
+           `2017` = `2017_expenditure_rd`,
+           `2018` = `2018_expenditure_rd`,
+           `2019` = `2019_expenditure_rd`) %>%
+    select(!contains("_")) %>%
+    gather(year,rd_expenditure) %>% 
+    ggplot() +
+    geom_bar(aes(x = year, y = rd_expenditure), stat = 'identity', fill = 'steelblue') +
+    theme_tufte() +
+    theme(
+      plot.title = element_text(size = 20),
+      axis.title.x = element_blank(),
+      axis.text.x = element_text(size = 15),
+      axis.text.y = element_text(size = 15),
+      axis.title.y = element_text(size = 15),
+      legend.text = element_text(size = 13),
+      plot.background = element_rect(fill = default_background_color,
+                                     color = NA),
+      panel.background = element_rect(fill = default_background_color,
+                                      color = NA),
+      legend.background = element_rect(fill = default_background_color,
+                                       color = NA)) +
+    ylab("R&D Expenditure")
+  
+  
+  percapita <- bbnj %>% filter(actor == country_name) %>% 
+    select( `2015_expenditure_rd_pc`, `2016_expenditure_rd_pc`,
+            `2017_expenditure_rd_pc`, `2018_expenditure_rd_pc`,
+            `2019_expenditure_rd_pc`) %>% 
+    mutate(`2015` = `2015_expenditure_rd_pc`,
+           `2016` = `2016_expenditure_rd_pc`,
+           `2017` = `2017_expenditure_rd_pc`,
+           `2018` = `2018_expenditure_rd_pc`,
+           `2019` = `2019_expenditure_rd_pc`) %>%
+    select(!contains("_")) %>%
+    gather(year,rd_expenditure_percapita) %>% 
+    ggplot() +
+    geom_bar(aes(x = year, y = rd_expenditure_percapita), stat = 'identity', fill = 'steelblue')+
+    theme_tufte() +
+    theme(
+      plot.title = element_text(size = 20),
+      axis.title.x = element_blank(),
+      axis.text.x = element_text(size = 15),
+      axis.text.y = element_text(size = 15),
+      axis.title.y = element_text(size = 15),
+      legend.text = element_text(size = 13),
+      plot.background = element_rect(fill = default_background_color,
+                                     color = NA),
+      panel.background = element_rect(fill = default_background_color,
+                                      color = NA),
+      legend.background = element_rect(fill = default_background_color,
+                                       color = NA)) +
+    ylab("R&D Expenditure per Capita")
+  
+  invest_compare <- plot_grid(total, percapita,labels = c(paste0(str_to_title(country_name)," Total Research Investment"),
+                                        paste0(str_to_title(country_name), " Per Capita Research Investment")))
+  
+  invest_compare
+  
+}) 
+
+
+
+output$rd_invest <- renderPlot({
+  ptlist <- list(rd_invest(),rd_invest_compare())
+  to_delete <- !sapply(ptlist,is.null)
+  ptlist <- ptlist[to_delete] 
+  grid.arrange(grobs=ptlist,nrow=length(ptlist))
+})
   
   
   output$barchart_clusters <- renderPlot({
@@ -829,7 +1024,8 @@ output$rd_invest <- renderPlot({
     
   })
   
-  ### no fokin clue why it doesnt arrange your shitdata. it works outside the shinyapp...
+
+
   output$concepts_compare <- renderTable({
     
     req(input$compare_country_check)
@@ -908,7 +1104,33 @@ output$rd_invest <- renderPlot({
       transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
                 `Participants in BBNJ IGC 2` = participants_BBNJ_igc2,
                 `Participants in BBNJ IGC 3` = participants_BBNJ_igc3,
-                `Participants in CBD COP 2018` = participants_CBD_cop18)
+                `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
+      pivot_longer(cols = starts_with("Participants")) %>%
+      transmute(Event = name,
+                N = value) %>%
+      rowwise() %>%
+      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
+    
+  }, digits = 0)
+  
+  
+output$participants_compare <- renderTable({
+    
+    req(input$compare_country_check)
+    
+    country_name <- str_to_lower(input$compare_country)
+    
+    bbnj %>% filter(actor == country_name) %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
+                                                      participants_BBNJ_igc3, participants_CBD_cop18) %>%
+      transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
+                `Participants in BBNJ IGC 2` = participants_BBNJ_igc2,
+                `Participants in BBNJ IGC 3` = participants_BBNJ_igc3,
+                `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
+      pivot_longer(cols = starts_with("Participants")) %>%
+      transmute(Event = name,
+                N = value) %>%
+      rowwise() %>%
+      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
     
   }, digits = 0)
   
@@ -936,6 +1158,31 @@ output$rd_invest <- renderPlot({
     
   }, digits = 0)
   
+  output$concepts2_compare <- renderTable({
+    
+    req(input$compare_country_check)
+    
+    country_name <- str_to_lower(input$compare_country)
+    
+    out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) %>% 
+      tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
+      filter(actor == country_name) %>% 
+      group_by(concept) %>% count() 
+    
+    if (dim(out_concept_bbnj)[1] == 0) {
+      print(paste0("No Concepts in ", str_to_title(country_name), "'s ", "Data"))
+    } else {out_concept_bbnj %>%
+        transmute(Concept = str_to_title(concept),
+                  `Times Occuring`= n) %>% 
+        ungroup() %>% arrange(desc(`Times Occuring`)) %>%
+        select(-concept)}
+    
+    
+    
+  }, digits = 0)
+  
+
+  
   
   # output$bbnj <- renderTable({
   #   
@@ -955,7 +1202,8 @@ output$rd_invest <- renderPlot({
   
   
   ## at the end of this shit chunk in line 1065 I try to plot/print or whatever both tables: first and second
-  output$scienceref <- renderTable({
+ 
+output$scienceref <- renderTable({
     country_name <- str_to_lower(input$country)
     
     bbnj_output <- bbnj %>% filter(actor == country_name)
@@ -1011,7 +1259,21 @@ output$rd_invest <- renderPlot({
         mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
                Package = str_split(name, " ")[[1]][6]) %>%
         pivot_wider(id_cols = IGC,
-                    names_from = Package)}
+                    names_from = Package)
+      
+      }
+    
+    
+  })
+  
+  output$scienceref_second <- renderTable({
+    
+    
+    
+    country_name <- str_to_lower(input$country)
+    
+    bbnj_output <- bbnj %>% filter(actor == country_name)
+    
     
     bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
     bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
@@ -1024,7 +1286,7 @@ output$rd_invest <- renderPlot({
       paste0("This country has no alliance data") 
       
     } else { 
-      my_table_2 <- bbnj_output_2 %>%
+      bbnj_output_2 %>%
         select(sci_fr_igc1_MGR,
                sci_fr_igc1_ABMT,
                sci_fr_igc1_EIA,
@@ -1040,7 +1302,80 @@ output$rd_invest <- renderPlot({
                sci_fr_igc3_EIA,
                sci_fr_igc3_CBTT,
                sci_fr_igc3_crosscutting) %>% 
-        transmute(`References to Science IGC 1 MGRs` = format(round(sci_fr_igc1_MGR,0)),
+        transmute(`References to Science IGC 1 MGRs` = round(sci_fr_igc1_MGR,0),
+                  `References to Science IGC 1 ABMTs` = sci_fr_igc1_ABMT,
+                  `References to Science IGC 1 EIAs` = sci_fr_igc1_EIA,
+                  `References to Science IGC 1 CBTT` = sci_fr_igc1_CBTT, 
+                  `References to Science IGC 1 Crosscutting` = sci_fr_igc1_crosscutting,
+                  `References to Science IGC 2 MGRs` = sci_fr_igc2_MGR,
+                  `References to Science IGC 2 ABMTs` = sci_fr_igc2_ABMT,
+                  `References to Science IGC 2 EIAs` = sci_fr_igc2_EIA,
+                  `References to Science IGC 2 CBTT` = sci_fr_igc2_CBTT, 
+                  `References to Science IGC 2 Crosscutting` = sci_fr_igc2_crosscutting,
+                  `References to Science IGC 3 MGRs` = sci_fr_igc3_MGR,
+                  `References to Science IGC 3 ABMTs` = sci_fr_igc3_ABMT,
+                  `References to Science IGC 3 EIAs` = sci_fr_igc3_EIA,
+                  `References to Science IGC 3 CBTT` = sci_fr_igc3_CBTT, 
+                  `References to Science IGC 3 Crosscutting` = sci_fr_igc3_crosscutting) %>% 
+        as.tibble() %>%
+        pivot_longer(cols = starts_with("References to Science IGC")) %>%
+        rowwise() %>%
+        mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+               Package = str_split(name, " ")[[1]][6]) %>%
+        pivot_wider(id_cols = IGC,
+                    names_from = Package)
+        
+      
+      
+      }
+    
+    
+    print(second_table)
+    # kable(first_table) %>% kable_styling(full_width = FALSE, position = "float_left")
+    # kable(second_table) %>% kable_styling(full_width = FALSE, position = "left")
+  }, digits = 0)
+  
+  
+
+  
+  output$scienceref_compare <- renderTable({
+    
+    
+    req(input$compare_country_check)
+    
+    country_name <- str_to_lower(input$compare_country)
+    
+    bbnj_output <- bbnj %>% filter(actor == country_name)
+    
+    
+    table.title <- bbnj %>% filter(actor == country_name) %>%
+      select(agg_frq_sci) %>%
+      mutate(agg_frq_sci = ifelse(is.na(agg_frq_sci), "No Data Available", as.integer(agg_frq_sci)))
+    table.title <- table.title$agg_frq_sci
+    
+    first_table <-  if (is.na(bbnj_output$total_time)) {
+      
+      paste0("No data available for this country, please look at its alliance: ", str_to_upper(bbnj_output$member_alliance))
+      
+    } else {
+      
+      my_table_1 <- bbnj_output %>%
+        select(sci_fr_igc1_MGR,
+               sci_fr_igc1_ABMT,
+               sci_fr_igc1_EIA,
+               sci_fr_igc1_CBTT,
+               sci_fr_igc1_crosscutting,
+               sci_fr_igc2_MGR,
+               sci_fr_igc2_ABMT,
+               sci_fr_igc2_EIA,
+               sci_fr_igc2_CBTT,
+               sci_fr_igc2_crosscutting,
+               sci_fr_igc3_MGR, 
+               sci_fr_igc3_ABMT,
+               sci_fr_igc3_EIA,
+               sci_fr_igc3_CBTT,
+               sci_fr_igc3_crosscutting) %>% 
+        transmute(`References to Science IGC 1 MGRs` = sci_fr_igc1_MGR,
                   `References to Science IGC 1 ABMTs` = sci_fr_igc1_ABMT,
                   `References to Science IGC 1 EIAs` = sci_fr_igc1_EIA,
                   `References to Science IGC 1 CBTT` = sci_fr_igc1_CBTT, 
@@ -1058,13 +1393,87 @@ output$rd_invest <- renderPlot({
         as.tibble() 
       
       
-      pivot_longer(my_table_2, cols = starts_with("References to Science IGC")) %>%
+      pivot_longer(my_table_1, cols = starts_with("References to Science IGC")) %>%
         rowwise() %>%
         mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
                Package = str_split(name, " ")[[1]][6]) %>%
         pivot_wider(id_cols = IGC,
-                    names_from = Package)}
-    print(first_table)
+                    names_from = Package)
+      
+    }
+    
+    
+  })
+  
+  
+
+  output$scienceref_second_compare <- renderTable({
+    
+    
+    
+    req(input$compare_country_check)
+    
+    country_name <- str_to_lower(input$compare_country)
+    
+    bbnj_output <- bbnj %>% filter(actor == country_name)
+    
+    
+    bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
+    bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
+    
+    bbnj_output$alliance == bbnj_output$actor
+    
+    
+    second_table <- if (bbnj_output$alliance == bbnj_output$actor) {
+      
+      paste0("This country has no alliance data") 
+      
+    } else { 
+      bbnj_output_2 %>%
+        select(sci_fr_igc1_MGR,
+               sci_fr_igc1_ABMT,
+               sci_fr_igc1_EIA,
+               sci_fr_igc1_CBTT,
+               sci_fr_igc1_crosscutting,
+               sci_fr_igc2_MGR,
+               sci_fr_igc2_ABMT,
+               sci_fr_igc2_EIA,
+               sci_fr_igc2_CBTT,
+               sci_fr_igc2_crosscutting,
+               sci_fr_igc3_MGR, 
+               sci_fr_igc3_ABMT,
+               sci_fr_igc3_EIA,
+               sci_fr_igc3_CBTT,
+               sci_fr_igc3_crosscutting) %>% 
+        transmute(`References to Science IGC 1 MGRs` = round(sci_fr_igc1_MGR,0),
+                  `References to Science IGC 1 ABMTs` = sci_fr_igc1_ABMT,
+                  `References to Science IGC 1 EIAs` = sci_fr_igc1_EIA,
+                  `References to Science IGC 1 CBTT` = sci_fr_igc1_CBTT, 
+                  `References to Science IGC 1 Crosscutting` = sci_fr_igc1_crosscutting,
+                  `References to Science IGC 2 MGRs` = sci_fr_igc2_MGR,
+                  `References to Science IGC 2 ABMTs` = sci_fr_igc2_ABMT,
+                  `References to Science IGC 2 EIAs` = sci_fr_igc2_EIA,
+                  `References to Science IGC 2 CBTT` = sci_fr_igc2_CBTT, 
+                  `References to Science IGC 2 Crosscutting` = sci_fr_igc2_crosscutting,
+                  `References to Science IGC 3 MGRs` = sci_fr_igc3_MGR,
+                  `References to Science IGC 3 ABMTs` = sci_fr_igc3_ABMT,
+                  `References to Science IGC 3 EIAs` = sci_fr_igc3_EIA,
+                  `References to Science IGC 3 CBTT` = sci_fr_igc3_CBTT, 
+                  `References to Science IGC 3 Crosscutting` = sci_fr_igc3_crosscutting) %>% 
+        as.tibble() %>%
+        pivot_longer(cols = starts_with("References to Science IGC")) %>%
+        rowwise() %>%
+        mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+               Package = str_split(name, " ")[[1]][6]) %>%
+        pivot_wider(id_cols = IGC,
+                    names_from = Package)
+      
+      
+      
+    }
+    
+    
+    print(second_table)
     # kable(first_table) %>% kable_styling(full_width = FALSE, position = "float_left")
     # kable(second_table) %>% kable_styling(full_width = FALSE, position = "left")
   }, digits = 0)
@@ -1072,10 +1481,8 @@ output$rd_invest <- renderPlot({
   
   
   
-  
-  ### here it should plot the text as "first" but it doesnt
-  
-  output$time <- renderPlot({
+ 
+time_plots <- reactive({
     
     country_name <- str_to_lower(input$country)
     
@@ -1088,18 +1495,21 @@ output$rd_invest <- renderPlot({
     
   
     
-    first <- if (is.na(bbnj_output$total_time)) {
+    if (is.na(bbnj_output$total_time) | bbnj_output$total_time == 0) {
       
-      par(mar = c(0,0,0,0),
-          bg = default_background_color)
-      plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-      text(x = 0.5, y = 0.5, paste0("No data available for this country, please look at its alliance: ", bbnj_output$member_alliance), 
-           cex = 1.6, col = "black",
-           bg = "blue")
+      first <- ggplot() +
+        theme_void() +
+        theme(
+          plot.background = element_rect(fill = default_background_color,
+                                         color = NA)
+        )+
+        geom_text(aes(0,0,label=paste0("No data available for this country,\nplease look at its alliance: ", bbnj_output$member_alliance)),
+                  size = 6) +
+        xlab(NULL)
       
     } else {
       
-      bbnj_output %>%
+      first <- bbnj_output %>%
         select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
         prop.table() %>% 
         as_tibble() %>%
@@ -1136,6 +1546,8 @@ output$rd_invest <- renderPlot({
     bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
     bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
     
+    
+    
     plot.title_2 <- bbnj_output_2 %>% 
       select(agg_total_time) %>%
       mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
@@ -1143,18 +1555,23 @@ output$rd_invest <- renderPlot({
     
     
 
-    second <- if (bbnj_output$alliance == bbnj_output$actor) {
-      par(mar = c(0,0,0,0),
-          bg = default_background_color)
-      plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-      text(x = 0.5, y = 0.5, paste("No data available for this country"), 
-           cex = 1.6, col = "black",
-           bg = "blue")
+    if (bbnj_output$alliance == bbnj_output$actor | dim(bbnj_output_2)[1] == 0) {
+      second <- ggplot() +
+        theme_void() +
+        theme(
+          plot.background = element_rect(fill = default_background_color,
+                                         color = NA)
+        )+
+        geom_text(aes(0,0,label='No data available for this country'),
+                  size = 6) +
+        xlab(NULL)
+      
+      #plot_grid(first, second)
       
     } else {
       
 
-      bbnj_output_2 %>%
+      second <- bbnj_output_2 %>%
         select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
         prop.table() %>% 
         as_tibble() %>%
@@ -1190,10 +1607,158 @@ output$rd_invest <- renderPlot({
     }
     
     
+
+    
     plot_grid(first, second)
     
     
   })
+
+
+
+
+time_plots_compare <- reactive({
+  
+  if (!input$compare_country_check) return(NULL)
+  
+  country_name <- str_to_lower(input$compare_country)
+  
+  bbnj_output <- bbnj %>% filter(actor == country_name)
+  
+  plot.title_1 <- bbnj_output %>% 
+    select(total_time) %>%
+    mutate(total_time = ifelse(is.na(total_time), "",
+                               paste0("Total Speaking Time: ", round(total_time/60, 2), " Minutes")))
+  
+  
+  
+  if (is.na(bbnj_output$total_time) | bbnj_output$total_time == 0) {
+    
+    first <- ggplot() +
+      theme_void() +
+      theme(
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA)
+      )+
+      geom_text(aes(0,0,label=paste0("No data available for this country,\nplease look at its alliance: ", bbnj_output$member_alliance)),
+                size = 6) +
+      xlab(NULL)
+    
+  } else {
+    
+    first <- bbnj_output %>%
+      select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
+      prop.table() %>% 
+      as_tibble() %>%
+      transmute(
+        MGR  = talk_time_MGR,
+        ABMT = talk_time_ABMT,
+        EIA  = talk_time_EIA,
+        CBTT = talk_time_CBTT,
+        Crosscutting = talk_time_crosscutting
+      ) %>%
+      gather(Package, Time, MGR:Crosscutting) %>% 
+      ggplot() + 
+      geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
+      ylab("% of Speaking Time") +
+      ggtitle(plot.title_1) +
+      theme_tufte() +
+      theme(
+        plot.title = element_text(hjust = .5, size = 20),
+        axis.title.x = element_text(size = 15),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        legend.text = element_text(size = 13),
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA),
+        panel.background = element_rect(fill = default_background_color,
+                                        color = NA),
+        legend.background = element_rect(fill = default_background_color,
+                                         color = NA))
+  }
+  
+  
+  bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
+  bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
+  
+  
+  
+  plot.title_2 <- bbnj_output_2 %>% 
+    select(agg_total_time) %>%
+    mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
+                                   paste0("Total Speaking Time ", bbnj_output$member_alliance,": ", round(agg_total_time/60, 2), " Minutes")))
+  
+  
+  
+  if (bbnj_output$alliance == bbnj_output$actor | dim(bbnj_output_2)[1] == 0) {
+    second <- ggplot() +
+      theme_void() +
+      theme(
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA)
+      )+
+      geom_text(aes(0,0,label='No data available for this country'),
+                size = 6) +
+      xlab(NULL)
+    
+    #plot_grid(first, second)
+    
+  } else {
+    
+    
+    second <- bbnj_output_2 %>%
+      select(talk_time_MGR, talk_time_ABMT, talk_time_EIA, talk_time_CBTT, talk_time_crosscutting) %>% 
+      prop.table() %>% 
+      as_tibble() %>%
+      transmute(
+        MGR  = talk_time_MGR,
+        ABMT = talk_time_ABMT,
+        EIA  = talk_time_EIA,
+        CBTT = talk_time_CBTT,
+        Crosscutting = talk_time_crosscutting
+      ) %>%
+      gather(Package, Time, MGR:Crosscutting) %>% 
+      ggplot() + 
+      geom_bar(stat = "identity", aes(y = Time, x = Package),  fill = "steelblue") +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
+      ylab("% of Speaking Time") +
+      ggtitle(plot.title_2) +
+      theme_tufte() +
+      theme(
+        plot.title = element_text(hjust = .5, size = 20),
+        axis.title.x = element_text(size = 15),
+        axis.text.x = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        legend.text = element_text(size = 13),
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA),
+        panel.background = element_rect(fill = default_background_color,
+                                        color = NA),
+        legend.background = element_rect(fill = default_background_color,
+                                         color = NA))
+    
+    
+  }
+  
+  
+  
+  
+  plot_grid(first, second)
+  
+  
+})
+
+
+
+output$time <- renderPlot({
+  ptlist <- list(time_plots(), time_plots_compare())
+  to_delete <- !sapply(ptlist, is.null)
+  ptlist <- ptlist[to_delete] 
+  grid.arrange(grobs=ptlist, nrow=length(ptlist))
+})
   
   
   output$refnetwork <- renderVisNetwork({  
