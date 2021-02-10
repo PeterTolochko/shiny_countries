@@ -134,119 +134,6 @@ bbnj <- bbnj %>%
 
 
 
-
-
-# countries_from_network <- countries_net %>% activate(nodes) %>% pull(name)
-# regions_from_network <- countries_net %>% activate(nodes) %>% pull(region)
-# 
-# current_region = regions_from_network[which(countries_from_network == country_name)]
-
-
-# test comment
-
-
-# 
-# 
-# ui <- fluidPage(
-#   setBackgroundColor(default_background_color),
-#   
-# 
-#              
-#   titlePanel('Marine Biodiversity Country Dashboard'),
-#   
-#   
-#   sidebarPanel(
-#     tabPanel("Manual", textOutput(outputId = "manual")),
-#     
-#     selectInput(inputId = "country",
-#                              label = "Choose a Country",
-#                              selected = "USA",
-#                              choices = sort(unique(data$country_fa))),
-#     checkboxInput("compare_country_check", "Do you want to compare with\n another country?", value = FALSE),
-#     uiOutput("compare_country") # checkbox to see if the user wants another country to compare
-#                  ),
-#   
-# 
-#   
-#   ### can you divide this in two main panels "Marine Biodiversity Research Data" & 
-#   #  "BBNJ Negotiation Data" and then the existing panels as sub-panels?
-#   mainPanel(
-    # tabsetPanel(
-    # 
-    # 
-    #   tabPanel("General Information on Research", htmlOutput(outputId = "info1")),
-    # 
-    #   tabPanel("Investment in Research", plotOutput(outputId = "rd_invest")),
-    # 
-    #   tabPanel("Thematic Clusters",
-    # 
-    #            plotOutput(outputId = "barchart_clusters"),
-    #            plotOutput(outputId = "top_5_clusters")),
-    # 
-    #   tabPanel("International Collaboration",
-    # 
-    #            fluidRow(
-    #              splitLayout(cellWidths = c("50%", "50%"), tableOutput("top_collab"), tableOutput("top_collab_compare"))
-    #            )),
-    #            #
-    #            # tableOutput(outputId = "top_collab"),
-    #            # tableOutput(outputId = 'top_collab_compare')),
-    # 
-    #   tabPanel("Key-words Network", sliderInput(
-    #     inputId = 'n_words',
-    #     label = 'Select the Maximum Number of Keyword Pairs',
-    #     value = 50,
-    #     min = 50,
-    #     max = 750),
-    # 
-    #     visNetworkOutput("network",
-    #                      height="1000px"),
-    # 
-    # 
-    #     visNetworkOutput('network_compare',
-    #                      height="1000px")),
-    # 
-    #   tabPanel("Concepts from Marine Scientific Research",
-    #            fluidRow(
-    #              splitLayout(cellWidths = c("50%", "50%"), tableOutput("concepts"), tableOutput("concepts_compare"))
-    #            ))
-    # ),
-#     
-#     
-#     
-#     
-#     
-#     
-#     
-    # tabsetPanel(
-    #   tabPanel("General Information on BBNJ Negotiations", textOutput(outputId = "info2")),
-    # 
-    #   tabPanel("Concepts in Negotiations", tableOutput(outputId = "concepts2")),
-    # 
-    #   tabPanel("Participants in Negotiations", tableOutput(outputId = "participants")),
-    # 
-    #   #tabPanel("BBNJ Observations Data", tableOutput(outputId = "bbnj")),
-    # 
-    #   tabPanel("BBNJ References to Science", tableOutput(outputId = "scienceref")),
-    # 
-    #   tabPanel("BBNJ Talk Time by Package", plotOutput(outputId = "time")),
-    # 
-    #   tabPanel("Negotiation Reference Network",
-    #            visNetworkOutput("refnetwork", height = "1000px"))
-    # )
-#   )
-#   
-# )
-# 
-# title <- tags$a(href="https://www.maripoldata.eu",
-#                 tags$img(src='maripol.png', height='60', width='60'),
-#                 "Maripoldata")
-
-
-# column(width = 6, tags$img(src='maripol.png',height='60',width='200')),
-
-# tags$a(imageOutput("image1"),href="https://www.google.com"))
-
 ui <- fluidPage(
   
   # theme = shinytheme("superhero"),
@@ -668,8 +555,7 @@ rd_invest_compare <- reactive({
   
   country_name <- str_to_lower(input$compare_country)
   
-  #country_name <- str_to_lower(input$country)
-  
+
   
   total <- bbnj %>% filter(actor == country_name) %>% 
     select( `2015_expenditure_rd`, `2016_expenditure_rd`,
@@ -1183,25 +1069,7 @@ output$participants_compare <- renderTable({
   
 
   
-  
-  # output$bbnj <- renderTable({
-  #   
-  #   country_name <- str_to_lower(input$country)
-  #   
-  #   bbnj %>% filter(actor == country_name) %>%
-  #     select(agg_frq_sci, agg_total_time) %>%
-  #     mutate(agg_frq_sci = ifelse(is.na(agg_frq_sci), "No Data Available", as.integer(agg_frq_sci)),
-  #            agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
-  #                                    paste0(round(agg_total_time/60, 2), " Minutes"))) %>%
-  #     transmute(`References to Science` = agg_frq_sci,
-  #               `Total Speaking Time` = agg_total_time)
-  #   
-  #   
-  #   
-  # })
-  
-  
-  ## at the end of this shit chunk in line 1065 I try to plot/print or whatever both tables: first and second
+
  
 output$scienceref <- renderTable({
     country_name <- str_to_lower(input$country)
@@ -1331,8 +1199,6 @@ output$scienceref <- renderTable({
     
     
     print(second_table)
-    # kable(first_table) %>% kable_styling(full_width = FALSE, position = "float_left")
-    # kable(second_table) %>% kable_styling(full_width = FALSE, position = "left")
   }, digits = 0)
   
   
@@ -1474,8 +1340,6 @@ output$scienceref <- renderTable({
     
     
     print(second_table)
-    # kable(first_table) %>% kable_styling(full_width = FALSE, position = "float_left")
-    # kable(second_table) %>% kable_styling(full_width = FALSE, position = "left")
   }, digits = 0)
   
   
