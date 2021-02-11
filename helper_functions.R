@@ -442,7 +442,7 @@ plot_time <- function(country_name) {
   plot.title_2 <- bbnj_output_2 %>% 
     select(agg_total_time) %>%
     mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
-                                   paste0("Total Speaking Time ", bbnj_output$member_alliance,": ", round(agg_total_time/60, 2), " Minutes")))
+                                   paste0("Total Speaking Time ", str_to_upper(bbnj_output$member_alliance),": ", round(agg_total_time/60, 2), " Minutes")))
   if (bbnj_output$alliance == bbnj_output$actor | dim(bbnj_output_2)[1] == 0) {
     second <- ggplot() +
       theme_void() +

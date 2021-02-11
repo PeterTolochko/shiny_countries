@@ -71,21 +71,15 @@ bbnj$actor[which(bbnj$actor == "united kingdom")] <- "uk"
 bbnj$actor[which(bbnj$actor == "viet nam")] <- "vietnam"
 bbnj$actor[which(bbnj$actor == "syrian arabic republic")] <- "syria"
 bbnj$actor[which(bbnj$actor == "republic of korea")] <- "south korea"
+data$country_fa[which(data$country_fa == "trinidad")] <- "trinidad and tobago"
+
 
 # add Countries (entities) that do not exist in bibliometric data 
 data <- data %>% add_row(country_fa = "Eu")
 data <- data %>% add_row(country_fa = "Holy See")
 
-### agg_total_time is not present for some aliance (NA), therefore there is a problem
-### for the naming of the second plot (plot.title_2)
-### THIS IS PROBABLY WRONG!!! SHOULD BE DEALT WITH PROPERLY IN THE FUTURE ###
 
-bbnj <- bbnj %>%
-  mutate(agg_total_time = talk_time_MGR +
-           talk_time_ABMT +
-           talk_time_EIA +
-           talk_time_CBTT +
-           talk_time_crosscutting)
+
 
 # Page Layout #-------------------------------------------------------------
 ui <- fluidPage(
