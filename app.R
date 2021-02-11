@@ -78,8 +78,9 @@ get_region <- function(country) {
 
 
 data <- read_csv("shiny_data.gz")
-# add EU 
-data <- data %>% add_row(country_fa = "Eu")
+
+
+
 #
 bbnj <- read_csv("states.csv")
 concepts_bbnj <- read_csv("concept_count.csv")
@@ -95,6 +96,10 @@ it is possible to access per country information on about
 marine biodiversity research and indicators on its position in the
 BBNJ negotiations." 
 
+
+erc <- "This MARIPOLDATA Marine Biodiversity Dashboard is part of the MARIPOLDATA project that has 
+received funding from the European Research Council (ERC) under the European Union's Horizon
+2020 research and innovation programme (grant agreement No 804599 - MARIPOLDATA - ERC-2018-STG)."
 
 load("countries_net.R")
 
@@ -112,7 +117,9 @@ bbnj$actor[which(bbnj$actor == "syrian arabic republic")] <- "syria"
 bbnj$actor[which(bbnj$actor == "republic of korea")] <- "south korea"
 
 
-
+# add Countries (entities) that do not exist in bibliometric data 
+data <- data %>% add_row(country_fa = "Eu")
+data <- data %>% add_row(country_fa = "Holy See")
 
 
 ### agg_total_time is not present for some aliance (NA), therefore there is a problem
@@ -146,7 +153,10 @@ ui <- fluidPage(
                              tags$img(src='maripol.png', height='120', width='120'),
                              "Maripoldata"),
       titlePanel('Marine Biodiversity Country Dashboard'),
+      tags$a(href="https://www.un.org/bbnj/",
+             "Link to the Biodiversity Beyond National Jurisdiction (BBNJ) negotiations."),
           tabPanel("Manual", textOutput(outputId = "manual")),
+      
 
           selectInput(inputId = "country",
                                    label = "Choose a Country",
@@ -154,7 +164,11 @@ ui <- fluidPage(
                                    choices = sort(unique(data$country_fa))),
           checkboxInput("compare_country_check", "Do you want to compare with\n another country?", value = FALSE),
           uiOutput("compare_country"), # checkbox to see if the user wants another country to compare
-          ),
+      tabPanel("ERC", textOutput(outputId = "erc")),
+      ),
+    
+    
+    
     
     
     
@@ -449,6 +463,10 @@ top_5_clusters_compare <- reactive({
     print(manual)
   })
   
+output$erc <- renderText({
+  print(erc)
+})
+
   
   output$info1 <- renderUI({
     
@@ -993,7 +1011,7 @@ output$rd_invest <- renderPlot({
                 `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
       pivot_longer(cols = starts_with("Participants")) %>%
       transmute(Event = name,
-                N = value) %>%
+                'Size of Delegation' = value) %>%
       rowwise() %>%
       mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
     
@@ -1014,7 +1032,7 @@ output$participants_compare <- renderTable({
                 `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
       pivot_longer(cols = starts_with("Participants")) %>%
       transmute(Event = name,
-                N = value) %>%
+                'Size of Delegation' = value) %>%
       rowwise() %>%
       mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
     
@@ -1367,7 +1385,7 @@ time_plots <- reactive({
           plot.background = element_rect(fill = default_background_color,
                                          color = NA)
         )+
-        geom_text(aes(0,0,label=paste0("No data available for this country,\nplease look at its alliance: ", bbnj_output$member_alliance)),
+        geom_text(aes(0,0,label=paste0("No data available for this country,\nplease look at its alliance: ", str_to_upper(bbnj_output$member_alliance))),
                   size = 6) +
         xlab(NULL)
       
@@ -1426,7 +1444,7 @@ time_plots <- reactive({
           plot.background = element_rect(fill = default_background_color,
                                          color = NA)
         )+
-        geom_text(aes(0,0,label='No data available for this country'),
+        geom_text(aes(0,0,label='This country has no alliance data'),
                   size = 6) +
         xlab(NULL)
       
