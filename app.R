@@ -150,7 +150,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       tags$a(href="https://www.maripoldata.eu",
-                             tags$img(src='maripol.png', height='120', width='120'),
+                             tags$img(src='full_logo.png', height='120', width='310'),
                              "Maripoldata"),
       titlePanel('Marine Biodiversity Country Dashboard'),
       tags$a(href="https://www.un.org/bbnj/",
@@ -173,7 +173,7 @@ ui <- fluidPage(
     
     
     
-    mainPanel(navbarPage(title = "Sidebar",
+    mainPanel(navbarPage(title = "",
               
                          
                          
@@ -1150,7 +1150,7 @@ output$scienceref <- renderTable({
       }
     
     
-  })
+  }, digits = 0)
   
   output$scienceref_second <- renderTable({
     
@@ -1287,7 +1287,7 @@ output$scienceref <- renderTable({
     }
     
     
-  })
+  }, digits = 0)
   
   
 
