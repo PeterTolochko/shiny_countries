@@ -504,7 +504,9 @@ reference_network <- function(country_name) {
   my_colors[which(V(net)$name == country_name)] <- "#AE3A4E"
   V(net)$color <- my_colors
   data <- toVisNetworkData(net)
-  plot <- visNetwork(nodes = data$nodes, edges = data$edges, height = "1000px", width = "100%") %>% 
+  plot <- visNetwork(nodes = data$nodes, edges = data$edges, height = "1000px", width = "100%", 
+                     main = paste(country_name, " Reference Network in Negotiations")) %>% 
+   
     visIgraphLayout()  
   visIgraph(net)
 }
