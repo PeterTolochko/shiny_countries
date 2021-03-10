@@ -23,10 +23,19 @@ create_concepts <- function(country_name) {
     mutate(sumVar = rowSums(select(., starts_with("search_")))) %>%
     filter(sumVar != 0,
            !is.na(country_fa))
+  if (country_name != "All"){
+    concepts_t <- data_country %>%
+      filter(country_fa == country_name) %>% t()
+    concepts <- concepts_t[-1, ] %>% as_tibble()
+  } else {
+    concepts_t <- data_country %>% t()
+    concepts_t <- apply(concepts_t[-1, ], c(1, 2), as.integer)
+    concepts_t <- rowSums(concepts_t)
+    concepts <- concepts_t %>% as_tibble()
+  }
   
-  concepts_t <- data_country %>%
-    filter(country_fa == country_name) %>% t()
-  concepts <- concepts_t[-1, ] %>% as_tibble()
+  
+  
   concepts$concepts = rownames(concepts_t)[-1]
   concepts$concepts <- list_concepts
   if (dim(concepts)[2] == 2) {concepts$value <- as.numeric(concepts$value)}
@@ -42,8 +51,17 @@ create_concepts <- function(country_name) {
 
 
 regional_dist_plot <- function(country_name) {
-  regional_dist <- data %>%
-    filter(country_fa == country_name) %>%
+  if (country_name != "All") {
+    regional_dist <- data %>%
+      filter(country_fa == country_name)
+  } else {
+    regional_dist <- data %>% 
+      filter(!is.na(cluster_70_names))
+  }
+  
+  
+  
+  regional_dist <- regional_dist %>%
     mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
     group_by(cluster_70_names) %>%
     count() %>%
@@ -73,14 +91,28 @@ regional_dist_plot <- function(country_name) {
 }
 
 top_5_clusters_plot <- function(country_name) {
-  top_5 <- data %>%
-    filter(country_fa == country_name) %>%
-    group_by(cluster_70_names) %>%
-    count() %>%
-    arrange(-n) %>%
-    ungroup() %>%
-    top_n(5) %>%
-    select(cluster_70_names)
+  
+  
+  if (country_name != "All") {
+    top_5 <- data %>%
+      filter(country_fa == country_name) %>%
+      group_by(cluster_70_names) %>%
+      count() %>%
+      arrange(-n) %>%
+      ungroup() %>%
+      top_n(5) %>%
+      select(cluster_70_names)
+  } else {
+    top_5 <- data %>%
+      group_by(cluster_70_names) %>%
+      count() %>%
+      arrange(-n) %>%
+      ungroup() %>%
+      top_n(5) %>%
+      select(cluster_70_names)
+  }
+  
+  
   p <- data %>%
     filter(cluster_70_names %in% top_5$cluster_70_names) %>%
     mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
@@ -114,7 +146,14 @@ top_5_clusters_plot <- function(country_name) {
 }
 
 rnd_plot <- function(country_name) {
-  total <- bbnj %>% filter(actor == country_name) %>% 
+  
+  if (country_name == "all"){
+    total <- bbnj
+  } else {
+    total <- bbnj %>% filter(actor == country_name)
+  }
+  
+  total <- total %>% 
     select( `2015_expenditure_rd`, `2016_expenditure_rd`,
             `2017_expenditure_rd`, `2018_expenditure_rd`,
             `2019_expenditure_rd`) %>% 
@@ -144,7 +183,13 @@ rnd_plot <- function(country_name) {
     ylab("R&D Expenditure")
   
   
-  percapita <- bbnj %>% filter(actor == country_name) %>% 
+  if (country_name == "all"){
+    percapita <- bbnj
+  } else {
+    percapita <- bbnj %>% filter(actor == country_name)
+  }
+  
+  percapita <- percapita %>% 
     select( `2015_expenditure_rd_pc`, `2016_expenditure_rd_pc`,
             `2017_expenditure_rd_pc`, `2018_expenditure_rd_pc`,
             `2019_expenditure_rd_pc`) %>% 
@@ -180,44 +225,69 @@ rnd_plot <- function(country_name) {
 
 
 top_collab_table <- function(country_name) {
-  countries_net %>%
-    activate(nodes) %>%
-    as_data_frame() %>%
-    mutate(has_country = ifelse(from == country_name | to == country_name, 1, 0)) %>%
-    filter(has_country == 1) %>%
-    mutate(from_new = ifelse(to == country_name, to, from),
-           to_new = ifelse(to == country_name, from, to)) %>%
-    group_by(to_new) %>%
-    count() %>%
-    ungroup() %>%
-    mutate(n_total = sum(n),
-           percent_collab = (n/n_total) * 100) %>%
-    arrange(desc(percent_collab)) %>%
-    top_n(10)  %>%
-    select(-n, n_total) %>%
-    transmute(`Collaboration With` = to_new, `Percent of Collaboration` = percent_collab) %>%
-    mutate(`Collaboration With` = ifelse(`Collaboration With` == 'usa' | `Collaboration With` == 'uk',
-                                         toupper(`Collaboration With`), str_to_title(`Collaboration With`)),
-           `Percent of Collaboration` = paste0(round(`Percent of Collaboration`, 2), "%"))
+  
+  if (country_name == "all") {
+    print("Collaboration Table is Only Available for Individual Countries")
+  } else {
+    countries_net %>%
+      activate(nodes) %>%
+      as_data_frame() %>%
+      mutate(has_country = ifelse(from == country_name | to == country_name, 1, 0)) %>%
+      filter(has_country == 1) %>%
+      mutate(from_new = ifelse(to == country_name, to, from),
+             to_new = ifelse(to == country_name, from, to)) %>%
+      group_by(to_new) %>%
+      count() %>%
+      ungroup() %>%
+      mutate(n_total = sum(n),
+             percent_collab = (n/n_total) * 100) %>%
+      arrange(desc(percent_collab)) %>%
+      top_n(10)  %>%
+      select(-n, n_total) %>%
+      transmute(`Collaboration With` = to_new, `Percent of Collaboration` = percent_collab) %>%
+      mutate(`Collaboration With` = ifelse(`Collaboration With` == 'usa' | `Collaboration With` == 'uk',
+                                           toupper(`Collaboration With`), str_to_title(`Collaboration With`)),
+             `Percent of Collaboration` = paste0(round(`Percent of Collaboration`, 2), "%"))
+  }
+  
 }
 
 
 coocurence_network <- function(country_name, n_words) {
-  tidy_keywords <- data %>%
-    filter(country_fa == country_name) %>%
-    dplyr::select(ID, UT) %>%
-    unnest_tokens(keyword, ID,
-                  token = stringr::str_split, pattern = ";") %>%
-    mutate(keyword = StrTrim(keyword)) %>%
-    mutate(keyword = str_replace_all(keyword, " - ", "-"))
-  word_pairs <- tidy_keywords %>% 
-    pairwise_count(keyword, UT, sort = TRUE, upper = FALSE)
-  word_pairs <- word_pairs[1:n_words, ]
-  word_pairs <- na.omit(word_pairs)
   
-  word_pairs_graph <- word_pairs %>%
-    mutate(value = n) %>%
-    graph_from_data_frame(directed = FALSE)
+  if (country_name != "All") {
+    tidy_keywords <- data %>%
+      filter(country_fa == country_name) %>%
+      dplyr::select(ID, UT) %>%
+      unnest_tokens(keyword, ID,
+                    token = stringr::str_split, pattern = ";") %>%
+      mutate(keyword = StrTrim(keyword)) %>%
+      mutate(keyword = str_replace_all(keyword, " - ", "-"))
+    word_pairs <- tidy_keywords %>% 
+      pairwise_count(keyword, UT, sort = TRUE, upper = FALSE)
+    word_pairs <- word_pairs[1:n_words, ]
+    word_pairs <- na.omit(word_pairs)
+    
+    word_pairs_graph <- word_pairs %>%
+      mutate(value = n) %>%
+      graph_from_data_frame(directed = FALSE)
+  } else {
+    tidy_keywords <- data %>%
+      dplyr::select(ID, UT) %>%
+      unnest_tokens(keyword, ID,
+                    token = stringr::str_split, pattern = ";") %>%
+      mutate(keyword = StrTrim(keyword)) %>%
+      mutate(keyword = str_replace_all(keyword, " - ", "-"))
+    word_pairs <- tidy_keywords %>% 
+      pairwise_count(keyword, UT, sort = TRUE, upper = FALSE)
+    word_pairs <- word_pairs[1:n_words, ]
+    word_pairs <- na.omit(word_pairs)
+    
+    word_pairs_graph <- word_pairs %>%
+      mutate(value = n) %>%
+      graph_from_data_frame(directed = FALSE)
+  }
+  
   
   
   
@@ -250,24 +320,53 @@ coocurence_network <- function(country_name, n_words) {
 
 
 participants_table <- function(country_name) {
-  bbnj %>% filter(actor == country_name) %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
-                                                    participants_BBNJ_igc3, participants_CBD_cop18) %>%
-    transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
-              `Participants in BBNJ IGC 2` = participants_BBNJ_igc2,
-              `Participants in BBNJ IGC 3` = participants_BBNJ_igc3,
-              `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
-    pivot_longer(cols = starts_with("Participants")) %>%
-    transmute(Event = name,
-              'Size of Delegation' = value) %>%
-    rowwise() %>%
-    mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
+  
+  if (country_name == "all") {
+    bbnj %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
+                    participants_BBNJ_igc3, participants_CBD_cop18) %>%
+      transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
+                `Participants in BBNJ IGC 2` = participants_BBNJ_igc2,
+                `Participants in BBNJ IGC 3` = participants_BBNJ_igc3,
+                `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
+      summarise(`Participants in BBNJ IGC 1` = mean(`Participants in BBNJ IGC 1`, na.rm = TRUE),
+                `Participants in BBNJ IGC 2` = mean(`Participants in BBNJ IGC 2`, na.rm = TRUE),
+                `Participants in BBNJ IGC 3` = mean(`Participants in BBNJ IGC 3`, na.rm = TRUE),
+                `Participants in CBD COP 2018` = mean(`Participants in CBD COP 2018`, na.rm = TRUE)) %>%
+      pivot_longer(cols = starts_with("Participants")) %>%
+      transmute(Event = name,
+                'Average Size of Delegation' = value) %>%
+      rowwise() %>%
+      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
+  }else{
+    bbnj %>% filter(actor == country_name) %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
+                                                      participants_BBNJ_igc3, participants_CBD_cop18) %>%
+      transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
+                `Participants in BBNJ IGC 2` = participants_BBNJ_igc2,
+                `Participants in BBNJ IGC 3` = participants_BBNJ_igc3,
+                `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
+      pivot_longer(cols = starts_with("Participants")) %>%
+      transmute(Event = name,
+                'Size of Delegation' = value) %>%
+      rowwise() %>%
+      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
+  }
+  
 }
 
 create_concepts_2 <- function(country_name) {
-  out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) %>% 
-    tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
-    filter(actor == country_name) %>% 
-    group_by(concept) %>% count() 
+  if (country_name == "all") {
+    out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) %>% 
+      tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
+      group_by(concept) %>% count() 
+  } else {
+    out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) %>% 
+      tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
+      filter(actor == country_name) %>% 
+      group_by(concept) %>% count() 
+  }
+  
+  
+  
   
   if (dim(out_concept_bbnj)[1] == 0) {
     print(paste0("No Concepts in ", str_to_title(country_name), "'s ", "Data"))
@@ -322,11 +421,11 @@ science_ref_first <- function(country_name) {
       as.tibble() 
     
     
-    pivot_longer(my_table_1, cols = starts_with("References to Science")) %>%
+    pivot_longer(my_table_1, cols = starts_with("References to Science IGC")) %>%
       rowwise() %>%
-      mutate("Negotiation Round" = paste("IGC", str_split(name, " ")[[1]][5]),
+      mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
              Package = str_split(name, " ")[[1]][6]) %>%
-      pivot_wider(id_cols = "Negotiation Round",
+      pivot_wider(id_cols = IGC,
                   names_from = Package)
   }
 }
@@ -506,7 +605,7 @@ reference_network <- function(country_name) {
   data <- toVisNetworkData(net)
   plot <- visNetwork(nodes = data$nodes, edges = data$edges, height = "1000px", width = "100%", 
                      main = paste(country_name, " Reference Network in Negotiations")) %>% 
-   
+    
     visIgraphLayout()  
   visIgraph(net)
 }
