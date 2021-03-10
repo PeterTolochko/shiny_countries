@@ -281,12 +281,12 @@ server <- function(input, output, session){
   
   # Dashboard General Description
   output$manual <- renderText({
-    print(manual)
+    HTML(manual)
   })
   
   # ERC Header
   output$erc <- renderText({
-    print(erc)
+    HTML(erc)
   })
   
   
