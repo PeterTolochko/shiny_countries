@@ -33,11 +33,11 @@ require(kableExtra)
 library(png)
 
 default_background_color <- "#f5f5f2"
+setwd("//share.univie.ac.at/maripoldata/5_Research/WP1/Collected Data/3_working data/shiny_countries")
 
 # Load Helper Functions ---------------------------------------------------
 # source("helper_functions.R")
 source("helper_functions.R", local = TRUE)$value
-
 
 
 
@@ -81,6 +81,9 @@ bbnj$actor[which(bbnj$actor == "republic of korea")] <- "south korea"
 # add Countries (entities) that do not exist in bibliometric data 
 data <- data %>% add_row(country_fa = "Eu")
 data <- data %>% add_row(country_fa = "Holy See")
+
+data <- data %>% add_row(country_fa = "All")
+
 
 ### agg_total_time is not present for some aliance (NA), therefore there is a problem
 ### for the naming of the second plot (plot.title_2)
