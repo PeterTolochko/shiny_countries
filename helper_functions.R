@@ -423,9 +423,9 @@ science_ref_first <- function(country_name) {
     
     pivot_longer(my_table_1, cols = starts_with("References to Science IGC")) %>%
       rowwise() %>%
-      mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+      mutate("By Country: IGC" = paste("IGC", str_split(name, " ")[[1]][5]),
              Package = str_split(name, " ")[[1]][6]) %>%
-      pivot_wider(id_cols = IGC,
+      pivot_wider(id_cols = "By Country: IGC",
                   names_from = Package)
   }
 }
@@ -472,9 +472,9 @@ science_ref_second <- function(country_name) {
       as.tibble() %>%
       pivot_longer(cols = starts_with("References to Science IGC")) %>%
       rowwise() %>%
-      mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+      mutate("By Alliance: IGC" = paste("IGC", str_split(name, " ")[[1]][5]),
              Package = str_split(name, " ")[[1]][6]) %>%
-      pivot_wider(id_cols = IGC,
+      pivot_wider(id_cols = "By Alliance: IGC",
                   names_from = Package)
   }
   print(second_table)
