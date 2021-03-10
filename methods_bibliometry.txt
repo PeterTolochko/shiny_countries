@@ -1,3 +1,11 @@
 In order to classify the articles into “Marine Biodiversity” field, as simple decision rule was implemented - whether “marine” or “biodiversity” (or several of their synonyms) appear in either the title, abstract, or keywords indexed by the Web of Science Core Collection online repository. Only English language scientific articles published in international journals were taken into consideration. A decision was taken to focus on the time window of 1990 - 2018. 1990 is the beginning of the period without gaps between consequent years, and 2018 is the final complete year (data collection took place in August 2019). The dataset comprises of 24,286 scientific publications, 21,952 of them are written by more than one author, and 9,700 are international (i.e., two or more authors from different countries in the author list). The data include 65,629 unique authors from 192 countries. All analyses were performed with Python and R programming languages. The full search string used to query the articles was the following:
 
-TOPIC: ("marine *diversity") OR (biodivers* (marine OR sea OR ocean)) OR (deep-sea biodivers*) OR ("marine protected area*" biodivers*) OR (sea biodivers*) OR (deep-ocean* biodivers*) OR ("genetic diversity" (marine OR sea OR ocean)) OR ("species diversity" (marine OR sea OR ocean)) OR ("taxonomic divers*" (marine OR sea OR ocean)) OR ("ecosystem divers*" (marine OR sea OR ocean)) OR ("functional divers*" (marine OR sea OR ocean))
+<br>
+
+<b>BOLD</b> Not Bold
+
+<em>TOPIC: ("marine *diversity") OR (biodivers* (marine OR sea OR ocean)) OR (deep-sea biodivers*) OR ("marine protected area*" biodivers*) OR (sea biodivers*) OR (deep-ocean* biodivers*) OR ("genetic diversity" (marine OR sea OR ocean)) OR ("species diversity" (marine OR sea OR ocean)) OR ("taxonomic divers*" (marine OR sea OR ocean)) 
+<br/>
+
+<b>","bold","</b>
+OR ("ecosystem divers*" (marine OR sea OR ocean)) OR ("functional divers*" (marine OR sea OR ocean))<em>

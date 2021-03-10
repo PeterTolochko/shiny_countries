@@ -33,7 +33,6 @@ require(kableExtra)
 library(png)
 
 default_background_color <- "#f5f5f2"
-setwd("//share.univie.ac.at/maripoldata/5_Research/WP1/Collected Data/3_working data/shiny_countries")
 
 # Load Helper Functions ---------------------------------------------------
 # source("helper_functions.R")
@@ -55,6 +54,8 @@ load("countries_net.R")
 countries_net <- countries_net %>% activate(nodes) %>% mutate(region = get_region(name))
 
 bib_meth <- read_lines("methods_bibliometry.txt")
+bib_meth <- paste(bib_meth, collapse = " ")
+
 ethno_meth <- read_lines("methods_ethno.txt")
 #----------------------------------------------------
 
@@ -112,7 +113,7 @@ ui <- fluidPage(
       selectInput(inputId = "country",
                   label = "Choose a Country",
                   selected = "USA",
-                  choices = sort(unique(data$country_fa))),
+                  choices = c("All", sort(unique(data$country_fa)))),
       checkboxInput("compare_country_check", "Do you want to compare with\n another country?", value = FALSE),
       uiOutput("compare_country"), # checkbox to see if the user wants another country to compare
       tabPanel("ERC",
@@ -152,7 +153,7 @@ ui <- fluidPage(
                                                            tableOutput("concepts_compare"))
                                              )),
                                     tabPanel("Methodology",
-                                             textOutput("methods_bibliometry"))
+                                             htmlOutput("methods_bibliometry"))
                                   )),
                          tabPanel(h4("Ethnographic Data from BBNJ Negotiations"),
                                   tabsetPanel(
@@ -186,7 +187,7 @@ ui <- fluidPage(
                                     tabPanel("Negotiation Reference Network",
                                              visNetworkOutput("refnetwork", height = "1000px")),
                                     tabPanel("Methodology",
-                                             textOutput("methods_ethnography"))
+                                             htmlOutput("methods_ethnography"))
                                   ))
     ))
   )
@@ -201,7 +202,7 @@ server <- function(input, output, session){
     selectInput(inputId = "compare_country",
                 label = "Choose a Country for Comparison",
                 selected = "USA",
-                choices = sort(unique(data$country_fa)))
+                choices = c("All", sort(unique(data$country_fa))))
   })
   
   
@@ -269,13 +270,13 @@ server <- function(input, output, session){
   # Each function is called twice -- for first and comparison countries
   
   # Bibliometric Methodology
-  output$methods_bibliometry <-renderText({
-    print(bib_meth)
+  output$methods_bibliometry <-renderUI({
+    HTML(bib_meth)
   })
   
   # Ethongraphic Methodology
   output$methods_ethnography <-renderText({
-    print(ethno_meth)
+    HTML(ethno_meth)
   })
   
   # Dashboard General Description
