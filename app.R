@@ -151,23 +151,23 @@ ui <- fluidPage(
                                     tabPanel("Methodology",
                                              textOutput("methods_bibliometry"))
                                   )),
-                         tabPanel(h4("Ethnographic Data"),
+                         tabPanel(h4("Ethnographic Data from BBNJ Negotiations"),
                                   tabsetPanel(
                                     tabPanel("General Information on BBNJ Negotiations",
                                              textOutput(outputId = "info2")),
-                                    tabPanel("Concepts in Negotiations",
+                                    tabPanel("Concepts used in Statements",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("concepts2"),
                                                            tableOutput("concepts2_compare"))
                                              )),
-                                    tabPanel("Participants in Negotiations",
+                                    tabPanel("Participants",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("participants"),
                                                            tableOutput("participants_compare"))
                                              )),
-                                    tabPanel("BBNJ References to Science",
+                                    tabPanel("References to Science",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("scienceref"),
@@ -178,7 +178,7 @@ ui <- fluidPage(
                                                            tableOutput("scienceref_second"),
                                                            tableOutput("scienceref_second_compare"))
                                              )),
-                                    tabPanel("BBNJ Talk Time by Package",
+                                    tabPanel("Talk Time",
                                              plotOutput(outputId = "time")),
                                     tabPanel("Negotiation Reference Network",
                                              visNetworkOutput("refnetwork", height = "1000px")),

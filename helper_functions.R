@@ -322,11 +322,11 @@ science_ref_first <- function(country_name) {
       as.tibble() 
     
     
-    pivot_longer(my_table_1, cols = starts_with("References to Science IGC")) %>%
+    pivot_longer(my_table_1, cols = starts_with("References to Science")) %>%
       rowwise() %>%
-      mutate(IGC = paste("IGC", str_split(name, " ")[[1]][5]),
+      mutate("Negotiation Round" = paste("IGC", str_split(name, " ")[[1]][5]),
              Package = str_split(name, " ")[[1]][6]) %>%
-      pivot_wider(id_cols = IGC,
+      pivot_wider(id_cols = "Negotiation Round",
                   names_from = Package)
   }
 }
