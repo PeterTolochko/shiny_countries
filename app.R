@@ -54,6 +54,8 @@ world_regions <- read_csv("world_regions.csv")
 load("countries_net.R")
 countries_net <- countries_net %>% activate(nodes) %>% mutate(region = get_region(name))
 
+bib_meth <- read_lines("methods_bibliometry.txt")
+ethno_meth <- read_lines("methods_ethno.txt")
 #----------------------------------------------------
 
 manual <- "This MARIPOLDATA Marine Biodiversity Dashboard 
@@ -145,7 +147,9 @@ ui <- fluidPage(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("concepts"),
                                                            tableOutput("concepts_compare"))
-                                             ))
+                                             )),
+                                    tabPanel("Methodology",
+                                             textOutput("methods_bibliometry"))
                                   )),
                          tabPanel(h4("Ethnographic Data"),
                                   tabsetPanel(
@@ -177,7 +181,9 @@ ui <- fluidPage(
                                     tabPanel("BBNJ Talk Time by Package",
                                              plotOutput(outputId = "time")),
                                     tabPanel("Negotiation Reference Network",
-                                             visNetworkOutput("refnetwork", height = "1000px"))
+                                             visNetworkOutput("refnetwork", height = "1000px")),
+                                    tabPanel("Methodology",
+                                             textOutput("methods_ethnography"))
                                   ))
     ))
   )
@@ -259,7 +265,15 @@ server <- function(input, output, session){
   #
   # Each function is called twice -- for first and comparison countries
   
+  # Bibliometric Methodology
+  output$methods_bibliometry <-renderText({
+    print(bib_meth)
+  })
   
+  # Ethongraphic Methodology
+  output$methods_ethnography <-renderText({
+    print(ethno_meth)
+  })
   
   # Dashboard General Description
   output$manual <- renderText({
