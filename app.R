@@ -57,6 +57,8 @@ bib_meth <- read_lines("methods_bibliometry.txt")
 bib_meth <- paste(bib_meth, collapse = " ")
 
 ethno_meth <- read_lines("methods_ethno.txt")
+bib_meth <- paste(ethno_meth, collapse = " ")
+
 #----------------------------------------------------
 
 manual <- "This MARIPOLDATA Marine Biodiversity Dashboard 
@@ -297,7 +299,7 @@ server <- function(input, output, session){
       select(text_science) %>% print(text_science, sep="<br/>")
     if (length(intemediate$text_science) == 0) {
       print("For this country we do not have specific information yet")
-    } else {print(intemediate$text_science)}
+    } else {HTML(intemediate$text_science)}
   })
   
   
@@ -308,7 +310,7 @@ server <- function(input, output, session){
       select(text_bbnj)
     if (length(intemediate$text_bbnj) == 0) {
       print("For this country we do not have specific information yet")
-    } else {print(intemediate$text_bbnj)}
+    } else {HTML(intemediate$text_bbnj)}
   })
   
   
