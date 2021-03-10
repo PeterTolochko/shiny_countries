@@ -57,7 +57,7 @@ bib_meth <- read_lines("methods_bibliometry.txt")
 bib_meth <- paste(bib_meth, collapse = " ")
 
 ethno_meth <- read_lines("methods_ethno.txt")
-bib_meth <- paste(ethno_meth, collapse = " ")
+ethno_meth <- paste(ethno_meth, collapse = " ")
 
 #----------------------------------------------------
 
@@ -160,7 +160,7 @@ ui <- fluidPage(
                          tabPanel(h4("Ethnographic Data from BBNJ Negotiations"),
                                   tabsetPanel(
                                     tabPanel("General Information on BBNJ Negotiations",
-                                             textOutput(outputId = "info2")),
+                                             htmlOutput(outputId = "info2")),
                                     tabPanel("Concepts used in Statements",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
@@ -304,10 +304,10 @@ server <- function(input, output, session){
   
   
   # Country description 2
-  output$info2 <- renderText({
+  output$info2 <- renderUI({
     country_name <- str_to_lower(input$country)
     intemediate <- research %>% filter(actor == country_name) %>% 
-      select(text_bbnj)
+      select(text_bbnj) %>% print(text_bbnj, sep="<br/>")
     if (length(intemediate$text_bbnj) == 0) {
       print("For this country we do not have specific information yet")
     } else {HTML(intemediate$text_bbnj)}
