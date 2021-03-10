@@ -1,14 +1,10 @@
 In order to classify the articles into “Marine Biodiversity” field, as simple decision rule was implemented - whether “marine” or “biodiversity” (or several of their synonyms) appear in either the title, abstract, or keywords indexed by the Web of Science Core Collection online repository. Only English language scientific articles published in international journals were taken into consideration. A decision was taken to focus on the time window of 1990 - 2018. 1990 is the beginning of the period without gaps between consequent years, and 2018 is the final complete year (data collection took place in August 2019). The dataset comprises of 24,286 scientific publications, 21,952 of them are written by more than one author, and 9,700 are international (i.e., two or more authors from different countries in the author list). The data include 65,629 unique authors from 192 countries. All analyses were performed with Python and R programming languages. The full search string used to query the articles was the following:
 
- <p><a href="https://www.frontiersin.org/articles/10.3389/fmars.2020.614282/full">link to an awesome paper</a></p>
-
 <br></br>
 
 
 <em>TOPIC: ("marine *diversity") OR (biodivers* (marine OR sea OR ocean)) OR (deep-sea biodivers*) OR ("marine protected area*" biodivers*) OR (sea biodivers*) OR (deep-ocean* biodivers*) OR ("genetic diversity" (marine OR sea OR ocean)) OR ("species diversity" (marine OR sea OR ocean)) OR ("taxonomic divers*" (marine OR sea OR ocean))OR ("ecosystem divers*" (marine OR sea OR ocean)) OR ("functional divers*" (marine OR sea OR ocean))</em>
 
-<p><a href="http://www.lalala.com">TEST</a></p>
+<br></br>
 
-Over one hundred governments are currently negotiating a new legally binding instrument for the conservation and sustainable use of marine biological diversity in areas beyond national jurisdiction (BBNJ). The new agreement is to address four broad themes: marine genetic resources (MGRs); area-based management tools (ABMTs), including marine protected areas (MPAs); environmental impact assessments (EIAs); and capacity building and the transfer of marine technology (CB&TT). <p><a href="https://www.frontiersin.org/articles/10.3389/fmars.2020.614282/full">link to an awesome paper</a></p>
-
-"<p>If you enjoyed this tool, please consider <a href='https://www.gofundme.com/f/fantasy-football-mental-health-initiative?utm_medium=copy_link&utm_source=customer&utm_campaign=p_lico+share-sheet'>donating to the Fantasy Football Mental Health Initiative</a>!</p>
+More details on the sample and methodology please refer to: <a href="https://www.sciencedirect.com/science/article/pii/S0308597X20309659">The usual suspects? Distribution of collaboration capital in marine biodiversity research</a>
