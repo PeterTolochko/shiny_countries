@@ -114,7 +114,7 @@ ui <- fluidPage(
                textOutput(outputId = "manual")),
       selectInput(inputId = "country",
                   label = "Choose a Country",
-                  selected = "USA",
+                  selected = "all",
                   choices = c("All", sort(unique(data$country_fa)))),
       checkboxInput("compare_country_check", "Do you want to compare with\n another country?", value = FALSE),
       uiOutput("compare_country"), # checkbox to see if the user wants another country to compare
@@ -125,9 +125,9 @@ ui <- fluidPage(
                          
                          tabPanel(h4("Bibliometric Data"),
                                   tabsetPanel(
-                                    tabPanel("General Information on Research",
+                                    tabPanel("General Information on Marine Scientific Research",
                                              htmlOutput(outputId = "info1")),
-                                    tabPanel("Investment in Research",
+                                    tabPanel("Investments",
                                              plotOutput(outputId = "rd_invest")),
                                     tabPanel("Thematic Clusters",
                                              plotOutput(outputId = "barchart_clusters"),
@@ -148,7 +148,7 @@ ui <- fluidPage(
                                                        height="1000px"),
                                       visNetworkOutput('network_compare',
                                                        height="1000px")),
-                                    tabPanel("Concepts from Marine Scientific Research",
+                                    tabPanel("Key Concepts in Publications",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("concepts"),
@@ -157,11 +157,11 @@ ui <- fluidPage(
                                     tabPanel("Methodology",
                                              htmlOutput("methods_bibliometry"))
                                   )),
-                         tabPanel(h4("Ethnographic Data from BBNJ Negotiations"),
+                         tabPanel(h4("Ethnographic Data"),
                                   tabsetPanel(
                                     tabPanel("General Information on BBNJ Negotiations",
                                              htmlOutput(outputId = "info2")),
-                                    tabPanel("Concepts used in Statements",
+                                    tabPanel("Key Concepts in Statements",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("concepts2"),
@@ -186,7 +186,7 @@ ui <- fluidPage(
                                              )),
                                     tabPanel("Talk Time",
                                              plotOutput(outputId = "time")),
-                                    tabPanel("Negotiation Reference Network",
+                                    tabPanel("Reference Network",
                                              visNetworkOutput("refnetwork", height = "1000px")),
                                     tabPanel("Methodology",
                                              htmlOutput("methods_ethnography"))
@@ -203,7 +203,7 @@ server <- function(input, output, session){
     req(input$compare_country_check)
     selectInput(inputId = "compare_country",
                 label = "Choose a Country for Comparison",
-                selected = "USA",
+                selected = "All",
                 choices = c("All", sort(unique(data$country_fa))))
   })
   

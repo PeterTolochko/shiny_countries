@@ -35,7 +35,7 @@ create_concepts <- function(country_name) {
   }
   
   
-  
+  value_name <- paste0(country_name, ": Total Times Occuring")
   concepts$concepts = rownames(concepts_t)[-1]
   concepts$concepts <- list_concepts
   if (dim(concepts)[2] == 2) {concepts$value <- as.numeric(concepts$value)}
@@ -44,8 +44,9 @@ create_concepts <- function(country_name) {
     print(paste0("No Concepts in ", country_name, "'s ", "Data"))
   } else {concepts %>%
       filter(value != 0) %>%
-      transmute(Concepts = concepts, `Times Occuring` = value)%>% 
-      arrange(desc(`Times Occuring`))
+      transmute(Concept = concepts, total = value)%>% 
+      arrange(desc(total)) %>% 
+      rename(!! value_name := total)
   }
 }
 
@@ -70,8 +71,8 @@ regional_dist_plot <- function(country_name) {
     ggplot() +
     geom_bar(aes(x = reorder(cluster_70_names, rel_freq), rel_freq), stat = 'identity',
              fill = 'steelblue') +
-    ylab(paste0('Relative Frequency of Clusters')) +
-    ggtitle(country_name) +
+   # ylab(paste0('Relative Frequency of Clusters')) +
+    ggtitle(country_name, ': Relative Frequency of Clusters') +
     xlab(NULL) +
     theme_tufte() +
     theme(
@@ -138,7 +139,7 @@ top_5_clusters_plot <- function(country_name) {
       legend.background = element_rect(fill = default_background_color,
                                        color = NA)) +
     ylab("Number of Articles") +
-    ggtitle(paste0(country_name, ' Top 5 Cluster Over Time')) +
+    ggtitle(paste0(country_name, ': Top 5 Cluster Over Time')) +
     theme(legend.title = element_blank(),
           axis.title.x = element_blank()) +
     scale_color_brewer(type = 'qual', palette = 2)
@@ -218,14 +219,14 @@ rnd_plot <- function(country_name) {
                                        color = NA)) +
     ylab("R&D Expenditure per Capita")
   
-  invest <- plot_grid(total, percapita,labels = c(paste0(str_to_title(country_name)," Total Research Investment"),
-                                                  paste0(str_to_title(country_name), " Per Capita Research Investment")))
+  invest <- plot_grid(total, percapita,labels = c(paste0(str_to_title(country_name),": Total Research Investment"),
+                                                  paste0(str_to_title(country_name), ": Per Capita Research Investment")))
   return(invest)
 }
 
 
 top_collab_table <- function(country_name) {
-  
+  value_name <- paste0(str_to_title(country_name), ": Collaboration with")
   if (country_name == "all") {
     print("Collaboration Table is Only Available for Individual Countries")
   } else {
@@ -244,10 +245,11 @@ top_collab_table <- function(country_name) {
       arrange(desc(percent_collab)) %>%
       top_n(10)  %>%
       select(-n, n_total) %>%
-      transmute(`Collaboration With` = to_new, `Percent of Collaboration` = percent_collab) %>%
-      mutate(`Collaboration With` = ifelse(`Collaboration With` == 'usa' | `Collaboration With` == 'uk',
-                                           toupper(`Collaboration With`), str_to_title(`Collaboration With`)),
-             `Percent of Collaboration` = paste0(round(`Percent of Collaboration`, 2), "%"))
+      transmute(colab = to_new, `Percent of Collaboration` = percent_collab) %>%
+      mutate(colab = ifelse(colab == 'usa' | colab == 'uk',
+                                           toupper(colab), str_to_title(colab)),
+             `Percent of Collaboration` = paste0(round(`Percent of Collaboration`, 2), "%")) %>% 
+      rename(!!value_name := colab)
   }
   
 }
@@ -320,7 +322,7 @@ coocurence_network <- function(country_name, n_words) {
 
 
 participants_table <- function(country_name) {
-  
+  value_name <- paste0(str_to_title(country_name), ": Size of Delegation")
   if (country_name == "all") {
     bbnj %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
                     participants_BBNJ_igc3, participants_CBD_cop18) %>%
@@ -346,9 +348,10 @@ participants_table <- function(country_name) {
                 `Participants in CBD COP 2018` = participants_CBD_cop18) %>%
       pivot_longer(cols = starts_with("Participants")) %>%
       transmute(Event = name,
-                'Size of Delegation' = value) %>%
+                delegation = value) %>%
       rowwise() %>%
-      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
+      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' ')) %>% 
+      rename(!!value_name := delegation)
   }
   
 }
@@ -366,20 +369,22 @@ create_concepts_2 <- function(country_name) {
   }
   
   
-  
+  value_name <- paste0(str_to_title(country_name), ": Total Times Occuring")
   
   if (dim(out_concept_bbnj)[1] == 0) {
     print(paste0("No Concepts in ", str_to_title(country_name), "'s ", "Data"))
   } else {out_concept_bbnj %>%
       transmute(Concept = str_to_title(concept),
-                `Times Occuring`= n) %>% 
-      ungroup() %>% arrange(desc(`Times Occuring`)) %>%
-      select(-concept)}
+                total= n) %>% 
+      ungroup() %>% arrange(desc(total)) %>%
+      select(-concept) %>% 
+      rename(!!value_name := total)}
 }
 
 
 science_ref_first <- function(country_name) {
   bbnj_output <- bbnj %>% filter(actor == country_name)
+  value_name <- paste0(str_to_title(country_name), ": Scientific References")
   table.title <- bbnj %>% filter(actor == country_name) %>%
     select(agg_frq_sci) %>%
     mutate(agg_frq_sci = ifelse(is.na(agg_frq_sci), "No Data Available", as.integer(agg_frq_sci)))
@@ -423,16 +428,18 @@ science_ref_first <- function(country_name) {
     
     pivot_longer(my_table_1, cols = starts_with("References to Science IGC")) %>%
       rowwise() %>%
-      mutate("By Country: IGC" = paste("IGC", str_split(name, " ")[[1]][5]),
+      mutate(igc = paste("IGC", str_split(name, " ")[[1]][5]),
              Package = str_split(name, " ")[[1]][6]) %>%
-      pivot_wider(id_cols = "By Country: IGC",
-                  names_from = Package)
+      pivot_wider(id_cols = igc,
+                  names_from = Package) %>% 
+      rename(!!value_name := igc)
   }
 }
 
 science_ref_second <- function(country_name) {
   bbnj_output <- bbnj %>% filter(actor == country_name)
   bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
+  value_name <- paste0(str_to_title(bbnj_output$member_alliance), ": Scientific References")
   bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
   bbnj_output$alliance == bbnj_output$actor
   second_table <- if (bbnj_output$alliance == bbnj_output$actor) {
@@ -472,10 +479,11 @@ science_ref_second <- function(country_name) {
       as.tibble() %>%
       pivot_longer(cols = starts_with("References to Science IGC")) %>%
       rowwise() %>%
-      mutate("By Alliance: IGC" = paste("IGC", str_split(name, " ")[[1]][5]),
+      mutate(igc = paste("IGC", str_split(name, " ")[[1]][5]),
              Package = str_split(name, " ")[[1]][6]) %>%
-      pivot_wider(id_cols = "By Alliance: IGC",
-                  names_from = Package)
+      pivot_wider(id_cols = igc,
+                  names_from = Package) %>% 
+      rename(!!value_name := igc)
   }
   print(second_table)
 }
@@ -541,7 +549,7 @@ plot_time <- function(country_name) {
   plot.title_2 <- bbnj_output_2 %>% 
     select(agg_total_time) %>%
     mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
-                                   paste0("Total Speaking Time ", bbnj_output$member_alliance,": ", round(agg_total_time/60, 2), " Minutes")))
+                                   paste0("Total Speaking Time ", str_to_upper(bbnj_output$member_alliance),": ", round(agg_total_time/60, 2), " Minutes")))
   if (bbnj_output$alliance == bbnj_output$actor | dim(bbnj_output_2)[1] == 0) {
     second <- ggplot() +
       theme_void() +
