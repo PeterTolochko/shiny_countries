@@ -322,8 +322,8 @@ coocurence_network <- function(country_name, n_words) {
 
 
 participants_table <- function(country_name) {
-  value_name <- paste0(str_to_title(country_name), ": Size of Delegation")
   if (country_name == "all") {
+    dig <- 2
     bbnj %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
                     participants_BBNJ_igc3, participants_CBD_cop18) %>%
       transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
@@ -336,10 +336,13 @@ participants_table <- function(country_name) {
                 `Participants in CBD COP 2018` = mean(`Participants in CBD COP 2018`, na.rm = TRUE)) %>%
       pivot_longer(cols = starts_with("Participants")) %>%
       transmute(Event = name,
-                'Average Size of Delegation' = value) %>%
+                delegation = value) %>%
       rowwise() %>%
-      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' '))
+      mutate(Event = paste(str_split(Event, " ")[[1]][3:5], collapse=' ')) %>% 
+      rename("Average Size of Delegation" = delegation)
   }else{
+    value_name <- paste0(str_to_title(country_name), ": Size of Delegation")
+    dig <- 0
     bbnj %>% filter(actor == country_name) %>% select(participants_BBNJ_igc1, participants_BBNJ_igc2,
                                                       participants_BBNJ_igc3, participants_CBD_cop18) %>%
       transmute(`Participants in BBNJ IGC 1` = participants_BBNJ_igc1,
@@ -358,16 +361,14 @@ participants_table <- function(country_name) {
 
 create_concepts_2 <- function(country_name) {
   if (country_name == "all") {
-    out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) %>% 
-      tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
-      group_by(concept) %>% count() 
+    out_concept_bbnj <- concepts_bbnj %>% 
+      mutate(n = reference) %>% select(concept, n)
   } else {
     out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) %>% 
       tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
       filter(actor == country_name) %>% 
-      group_by(concept) %>% count() 
+      group_by(concept) %>% count() %>% ungroup()
   }
-  
   
   value_name <- paste0(str_to_title(country_name), ": Total Times Occuring")
   
@@ -376,10 +377,66 @@ create_concepts_2 <- function(country_name) {
   } else {out_concept_bbnj %>%
       transmute(Concept = str_to_title(concept),
                 total= n) %>% 
-      ungroup() %>% arrange(desc(total)) %>%
-      select(-concept) %>% 
+      arrange(desc(total)) %>%
       rename(!!value_name := total)}
 }
+
+
+
+create_concepts_2_alliance <- function(country_name) {
+  alliance <- ifelse (country_name %in% afr, paste("African Group"),
+                      ifelse (country_name %in% clam, "CLAM",
+                              ifelse (country_name %in% cari, "CARICOM",
+                                      ifelse (country_name %in% aos, "AOSIS",
+                                              ifelse (country_name %in% piss, "PSIDS",
+                                                      ifelse (country_name %in% ldc, "Least Developed",
+                                                              ifelse (country_name %in% nun, "Non UNCLOS Party",
+                                                                      ifelse (country_name %in% eu, "eu",
+                                                                              NA)))))))) 
+  if (country_name == "all") {
+    out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) 
+    mutate(n = reference) %>% select(concept, n)
+  } else {
+    out_concept_bbnj <- concepts_bbnj %>% 
+      tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
+      mutate(obo_alliance =ifelse (actor %in% obo_africa, paste("African Group"),
+                                   ifelse (actor %in% obo_clam, "CLAM",
+                                           ifelse (actor %in% obo_caricom, "CARICOM",
+                                                   ifelse (actor %in% obo_aosis, "AOSIS",
+                                                           ifelse (actor %in% obo_psids, "PSIDS",
+                                                                   ifelse (actor %in% obo_ldc, "Least Developed",
+                                                                           ifelse (actor %in% obo_non, "Non UNCLOS Party",
+                                                                                   ifelse (actor %in% obo_landlocked, "Landlocked",
+                                                                                           ifelse(actor %in% obo_g77, "G77",
+                                                                                                  actor)))))))))) %>% 
+      mutate(member_alliance =ifelse (actor %in% afr, paste("African Group"),
+                                      ifelse (actor %in% clam, "CLAM",
+                                              ifelse (actor %in% cari, "CARICOM",
+                                                      ifelse (actor %in% aos, "AOSIS",
+                                                              ifelse (actor %in% piss, "PSIDS",
+                                                                      ifelse (actor %in% ldc, "Least Developed",
+                                                                              ifelse (actor %in% nun, "Non UNCLOS Party",
+                                                                                      ifelse (actor %in% eu, "EU",
+                                                                                              actor))))))))) %>% 
+      filter(obo_alliance == alliance | actor == alliance) %>% 
+      group_by(concept) %>% count() %>% ungroup() %>% 
+      select(concept, n)
+  }
+  
+  
+  
+  
+  value_name <- paste0(str_to_upper(alliance), ": Total Times Occuring")
+  
+  if (dim(out_concept_bbnj)[1] == 0) {
+    print(paste0("No Alliance Data"))
+  } else {out_concept_bbnj %>%
+      transmute(Concept = str_to_title(concept),
+                total= n) %>% 
+      arrange(desc(total)) %>%
+      rename(!!value_name := total)}
+}
+
 
 
 science_ref_first <- function(country_name) {

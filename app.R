@@ -166,6 +166,11 @@ ui <- fluidPage(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("concepts2"),
                                                            tableOutput("concepts2_compare"))
+                                             ),
+                                            fluidRow(
+                                              splitLayout(cellWidths = c("50%", "50%"),
+                                                            tableOutput("concepts2_alliance"),
+                                                            tableOutput("concepts2_alliance_compare"))   
                                              )),
                                     tabPanel("Participants",
                                              fluidRow(
@@ -384,9 +389,9 @@ server <- function(input, output, session){
   #----------------------------------------------------
   # Table for BBNJ participants
   output$participants <- renderTable({
-    country_name <- str_to_lower(input$country)
-    participants_table(country_name)
-  }, digits = 0)
+        country_name <- str_to_lower(input$country)
+        participants_table(country_name)
+      }, digits = dig)
   
   output$participants_compare <- renderTable({
     req(input$compare_country_check)
@@ -401,12 +406,22 @@ server <- function(input, output, session){
     create_concepts_2(country_name)
   }, digits = 0)
   
+  output$concepts2_alliance <- renderTable({
+    country_name <- str_to_lower(input$country)
+    create_concepts_2_alliance(country_name)
+  }, digits = 0)
+  
   output$concepts2_compare <- renderTable({
     req(input$compare_country_check)
     country_name <- str_to_lower(input$compare_country)
     create_concepts_2(country_name)
   }, digits = 0)
   
+  output$concepts2_alliance_compare <- renderTable({
+    req(input$compare_country_check)
+    country_name <- str_to_lower(input$compare_country)
+    create_concepts_2_alliance(country_name)
+  }, digits = 0)
   #----------------------------------------------------
   # Tables for references to science from BBNJ data
   output$scienceref <- renderTable({
