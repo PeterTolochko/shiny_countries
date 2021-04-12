@@ -71,8 +71,8 @@ regional_dist_plot <- function(country_name) {
     ggplot() +
     geom_bar(aes(x = reorder(cluster_70_names, rel_freq), rel_freq), stat = 'identity',
              fill = 'steelblue') +
-   # ylab(paste0('Relative Frequency of Clusters')) +
-    ggtitle(country_name, ': Relative Frequency of Clusters') +
+    ylab(paste0('Relative Frequency of Clusters')) +
+    ggtitle(paste0(country_name, ': Relative Frequency of Clusters')) +
     xlab(NULL) +
     theme_tufte() +
     theme(
@@ -166,7 +166,7 @@ rnd_plot <- function(country_name) {
     select(!contains("_")) %>%
     gather(year,rd_expenditure) %>% 
     ggplot() +
-    geom_bar(aes(x = year, y = rd_expenditure), stat = 'identity', fill = 'steelblue') +
+    geom_bar(aes(x = year, y = rd_expenditure/1000000), stat = 'identity', fill = 'steelblue') +
     theme_tufte() +
     theme(
       plot.title = element_text(size = 20),
@@ -181,7 +181,7 @@ rnd_plot <- function(country_name) {
                                       color = NA),
       legend.background = element_rect(fill = default_background_color,
                                        color = NA)) +
-    ylab("R&D Expenditure")
+    ylab("R&D Expenditure (in million $)")
   
   
   if (country_name == "all"){
@@ -217,7 +217,7 @@ rnd_plot <- function(country_name) {
                                       color = NA),
       legend.background = element_rect(fill = default_background_color,
                                        color = NA)) +
-    ylab("R&D Expenditure per Capita")
+    ylab("R&D Expenditure per Capita (in $)")
   
   invest <- plot_grid(total, percapita,labels = c(paste0(str_to_title(country_name),": Total Research Investment"),
                                                   paste0(str_to_title(country_name), ": Per Capita Research Investment")))
@@ -444,7 +444,7 @@ science_ref_first <- function(country_name) {
   value_name <- paste0(str_to_title(country_name), ": Scientific References")
   table.title <- bbnj %>% filter(actor == country_name) %>%
     select(agg_frq_sci) %>%
-    mutate(agg_frq_sci = ifelse(is.na(agg_frq_sci), "No Data Available", as.integer(agg_frq_sci)))
+    mutate(agg_frq_sci = ifelse((is.na(agg_frq_sci) | agg_frq_sci == 0), "No Data Available", as.integer(agg_frq_sci)))
   table.title <- table.title$agg_frq_sci
   first_table <-  if (is.na(bbnj_output$total_time)) {
     paste0("No data available for this country, please look at its alliance: ", str_to_upper(bbnj_output$member_alliance))
@@ -547,11 +547,12 @@ science_ref_second <- function(country_name) {
 
 plot_time <- function(country_name) {
   bbnj_output <- bbnj %>% filter(actor == country_name)
+  value_name <- paste0(str_to_title(country_name), ": Total Speaking Time (", round(bbnj_output$total_time/60, 2), " Minutes)")
   
   plot.title_1 <- bbnj_output %>% 
     select(total_time) %>%
     mutate(total_time = ifelse(is.na(total_time), "",
-                               paste0("Total Speaking Time: ", round(total_time/60, 2), " Minutes")))
+                               paste0(value_name)))
   
   
   
@@ -563,7 +564,7 @@ plot_time <- function(country_name) {
         plot.background = element_rect(fill = default_background_color,
                                        color = NA)
       )+
-      geom_text(aes(0,0,label=paste0("No data available for this country,\nplease look at its alliance: ", str_to_upper(bbnj_output$member_alliance))),
+      geom_text(aes(0,0,label=paste0("No data available for ", str_to_title(country_name),",\nplease look at its alliance: ", str_to_upper(bbnj_output$member_alliance))),
                 size = 6) +
       xlab(NULL)
     
@@ -588,7 +589,7 @@ plot_time <- function(country_name) {
       theme_tufte() +
       theme(
         plot.title = element_text(hjust = .5, size = 20),
-        axis.title.x = element_text(size = 15),
+        axis.title.x = element_blank(),
         axis.text.x = element_text(size = 15),
         axis.text.y = element_text(size = 15),
         axis.title.y = element_text(size = 15),
@@ -602,11 +603,13 @@ plot_time <- function(country_name) {
   }
   bbnj_output$member_alliance <- str_to_lower(bbnj_output$member_alliance)
   bbnj_output_2 <- filter(bbnj, actor == bbnj_output$member_alliance)
+  value_name <- paste0(str_to_title(country_name), " has no alliance data")
+  
   
   plot.title_2 <- bbnj_output_2 %>% 
     select(agg_total_time) %>%
     mutate(agg_total_time = ifelse(is.na(agg_total_time), "No Data Available",
-                                   paste0("Total Speaking Time ", str_to_upper(bbnj_output$member_alliance),": ", round(agg_total_time/60, 2), " Minutes")))
+                                   paste0(str_to_upper(bbnj_output$member_alliance), ": Total Speaking Time (", round(agg_total_time/60, 2), " Minutes)")))
   if (bbnj_output$alliance == bbnj_output$actor | dim(bbnj_output_2)[1] == 0) {
     second <- ggplot() +
       theme_void() +
@@ -614,7 +617,7 @@ plot_time <- function(country_name) {
         plot.background = element_rect(fill = default_background_color,
                                        color = NA)
       )+
-      geom_text(aes(0,0,label='This country has no alliance data'),
+      geom_text(aes(0,0,label= value_name),
                 size = 6) +
       xlab(NULL)
   } else {
@@ -638,7 +641,7 @@ plot_time <- function(country_name) {
       theme_tufte() +
       theme(
         plot.title = element_text(hjust = .5, size = 20),
-        axis.title.x = element_text(size = 15),
+        axis.title.x = element_blank(),
         axis.text.x = element_text(size = 15),
         axis.text.y = element_text(size = 15),
         axis.title.y = element_text(size = 15),

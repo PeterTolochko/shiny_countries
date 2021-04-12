@@ -38,6 +38,8 @@ default_background_color <- "#f5f5f2"
 # source("helper_functions.R")
 source("helper_functions.R", local = TRUE)$value
 
+# load alliance data
+source("alliance.R", local = TRUE)$value
 
 
 # Reading Data #------------------------------------------------------------
@@ -80,12 +82,27 @@ bbnj$actor[which(bbnj$actor == "united kingdom")] <- "uk"
 bbnj$actor[which(bbnj$actor == "viet nam")] <- "vietnam"
 bbnj$actor[which(bbnj$actor == "syrian arabic republic")] <- "syria"
 bbnj$actor[which(bbnj$actor == "republic of korea")] <- "south korea"
+bbnj$actor[which(bbnj$actor == "brunei darussalam")] <- "brunei"
+
+
+bbnj$alliance[which(bbnj$alliance == "russian federation")] <- "russia"
+bbnj$alliance[which(bbnj$alliance == "viet nam")] <- "vietnam"
+bbnj$alliance[which(bbnj$alliance == "syrian arabic republic")] <- "syria"
+bbnj$alliance[which(bbnj$alliance == "republic of korea")] <- "south korea"
+bbnj$alliance[which(bbnj$alliance == "brunei darussalam")] <- "brunei"
+
+
+
 
 # add Countries (entities) that do not exist in bibliometric data 
 data <- data %>% add_row(country_fa = "Eu")
 data <- data %>% add_row(country_fa = "Holy See")
-
 data <- data %>% add_row(country_fa = "All")
+data <- data %>% add_row(country_fa = "Cooks Island")
+data <- data %>% add_row(country_fa = "El Salvador")
+data <- data %>% add_row(country_fa = "Dominican Republic")
+data <- data %>% add_row(country_fa = "Grenada")
+
 
 
 ### agg_total_time is not present for some aliance (NA), therefore there is a problem
@@ -105,8 +122,11 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       tags$a(href="https://www.maripoldata.eu",
-             tags$img(src='full_logo.png', height='120', width='310'),
-             "Maripoldata"),
+             tags$img(src='maripol.png', height='120', width='150')),
+      tags$a(href="https://politikwissenschaft.univie.ac.at/",
+             tags$img(src='logo_P.jpg', height='120', width='340')),
+      tags$a(href="https://erc.europa.eu/",
+             tags$img(src='Logo_E.png', height='120', width='260')),
       titlePanel('Marine Biodiversity Country Dashboard'),
       tags$a(href="https://www.un.org/bbnj/",
              "Link to the Biodiversity Beyond National Jurisdiction (BBNJ) negotiations."),
@@ -123,11 +143,11 @@ ui <- fluidPage(
     ),
     mainPanel(navbarPage(title = "",
                          
-                         tabPanel(h4("Bibliometric Data"),
+                         tabPanel(h4("Scientometric Data"),
                                   tabsetPanel(
-                                    tabPanel("General Information on Marine Scientific Research",
+                                    tabPanel("General Information on Ocean Science Marine Biodiversity Research",
                                              htmlOutput(outputId = "info1")),
-                                    tabPanel("Investments",
+                                    tabPanel("Research Investments",
                                              plotOutput(outputId = "rd_invest")),
                                     tabPanel("Thematic Clusters",
                                              plotOutput(outputId = "barchart_clusters"),
@@ -148,7 +168,7 @@ ui <- fluidPage(
                                                        height="1000px"),
                                       visNetworkOutput('network_compare',
                                                        height="1000px")),
-                                    tabPanel("Key Concepts in Publications",
+                                    tabPanel("Concepts used in Scientific Research",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("concepts"),
@@ -208,7 +228,7 @@ server <- function(input, output, session){
     req(input$compare_country_check)
     selectInput(inputId = "compare_country",
                 label = "Choose a Country for Comparison",
-                selected = "All",
+                selected = "all",
                 choices = c("All", sort(unique(data$country_fa))))
   })
   
@@ -391,7 +411,7 @@ server <- function(input, output, session){
   output$participants <- renderTable({
         country_name <- str_to_lower(input$country)
         participants_table(country_name)
-      }, digits = dig)
+      }, digits = 0)
   
   output$participants_compare <- renderTable({
     req(input$compare_country_check)
@@ -444,7 +464,6 @@ server <- function(input, output, session){
     req(input$compare_country_check)
     country_name <- str_to_lower(input$compare_country)
     science_ref_second(country_name)
-    print(second_table)
   }, digits = 0)
   
   #----------------------------------------------------

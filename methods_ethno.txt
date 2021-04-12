@@ -10,6 +10,8 @@ Notes on statements content are close to transcripts of a state’s expression o
 Regarding the first IGC, which the research team did not attend, we watched the proceedings via the UN webcast and made transcripts. 
 Detailed information on organizing institutions, speakers, and content was also gathered at side events. Furthermore, participant lists served as an additional source of information. <br>
 
+
+
 The obtained ethnographic data was then analyzed using the R programming language. In R, we aggregated all individual observations and analyzed the whole dataset quantitatively according to our variables of interest. 
 In the following we give an overview about the variables and how they were derived from the data. <br> 
 <br>
@@ -17,6 +19,7 @@ The variable 	<em> Concepts used in Statements </em> scans the bulk of statement
 <em>Participants </em> gives an overview about the delegation size of each state, adding the delegation sizes of the CBD COP 2018.<br>
 The variable <em> References to Science </em> counts the amount of times the researcher indicated that the statement at hand made reference to scientific knowledge or used scientific reasoning to support the states' position.<br>
 The variable <em> Talk Time </em> aggregates the time that each actor in the negotiations spoke - and if available the aggregated time of its alliance. Each observation in the matrix received a time stamp and with this the difference between points of observations could be calculated as the time that each participant spoke.
-
-
+<br>
+The data on alliances stems from the ethnographic fieldwork. During the BBNJ negotiations, many countries formed alliances. Within these alliance, one country spoke on behalf of the whole group of countries that belongs 
+to that alliance. In order to analyse this accordingly, we aggregated each variable for each alliance to display the behaviour during the negotiations per alliance. 
 
