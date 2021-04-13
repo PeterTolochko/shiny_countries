@@ -75,8 +75,7 @@ land <- c("Afghanistan", "Armenia", "Azerbaijan", "Bhutan", "Bolivia", "Botswana
 nun <- c("Turkey", "Venezuela", "Syrian Arab Republic", "UZBEKISTAN",
          "TURKMENISTAN", "TAJIKISTAN")
 library(readxl)
-g77 <- read_excel("//share.univie.ac.at/maripoldata/5_Research/WP1/Collected Data/3_working data/g77.xlsx", 
-                  col_names = FALSE)
+g77 <- read_excel("g77.xlsx", col_names = FALSE)
 g77 <- unlist(t(g77))
 
 aos <- str_to_lower(aos)

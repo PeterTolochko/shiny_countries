@@ -124,7 +124,7 @@ ui <- fluidPage(
       tags$a(href="https://www.maripoldata.eu",
              tags$img(src='maripol.png', height='120', width='150')),
       tags$a(href="https://politikwissenschaft.univie.ac.at/",
-             tags$img(src='logo_P.jpg', height='120', width='340')),
+             tags$img(src='logo_P.png', height='120', width='340')),
       tags$a(href="https://erc.europa.eu/",
              tags$img(src='Logo_E.png', height='120', width='260')),
       titlePanel('Marine Biodiversity Country Dashboard'),
