@@ -7,10 +7,11 @@ In order to classify the articles into “Marine Biodiversity” field, as simpl
 
 <br></br>
 
-More details on the sample and methodology please refer to: <a href="https://www.sciencedirect.com/science/article/pii/S0308597X20309659">The usual suspects? Distribution of collaboration capital in marine biodiversity research</a>
+For more explanation of the methodological approach to researching marine biodiversity science bibliometrically, please refer to the <a href="https://www.sciencedirect.com/science/article/pii/S0308597X20309659">paper</a> by Tolochko & Vadrot (2021).
 
 
 <br></br>
 
-The data on research investment by country is from the UNESCO Institute for Statistics and can be found under: http://data.uis.unesco.org/
+The data on research investment by country is from the <a href="http://data.uis.unesco.org/">UNESCO Institute for Statistics</a>.
+
 
