@@ -70,9 +70,8 @@ it is possible to access per country information on about
 marine biodiversity research and indicators on its position in the
 BBNJ negotiations." 
 
-erc <- "This MARIPOLDATA Marine Biodiversity Dashboard is part of the MARIPOLDATA project that has 
-received funding from the European Research Council (ERC) under the European Union's Horizon
-2020 research and innovation programme (grant agreement No 804599 - MARIPOLDATA - ERC-2018-STG)."
+erc <- "This Dashboard is part of the MARIPOLDATA project that has received funding from the European Research Council (ERC) 
+under the European Union's Horizon 2020 research and innovation programme (grant agreement No 804599)."
 
 #----------------------------------------------------
 ### Renaming some incosistently named countries in the bbnj dataset ###
@@ -124,9 +123,8 @@ ui <- fluidPage(
       tags$a(href="https://www.maripoldata.eu",
              tags$img(src='maripol.png', height='120', width='150')),
       tags$a(href="https://politikwissenschaft.univie.ac.at/",
-             tags$img(src='Politikwissenschaft_en_4c.png', height='120', width='400')),
-      tags$a(href="https://erc.europa.eu/",
-             tags$img(src='Logo_E.png', height='120', width='260')),
+             tags$img(src='Politikwissenschaft_en_4c.png', height='120', width='360')),
+
       titlePanel('Marine Biodiversity Country Dashboard'),
       tags$a(href="https://www.un.org/bbnj/",
              "Link to the Biodiversity Beyond National Jurisdiction (BBNJ) negotiations."),
@@ -139,6 +137,8 @@ ui <- fluidPage(
       checkboxInput("compare_country_check", "Do you want to compare with\n another country?", value = FALSE),
       uiOutput("compare_country"), # checkbox to see if the user wants another country to compare
       tabPanel("ERC",
+               tags$a(href="https://erc.europa.eu/",
+                      tags$img(src='Logo_E.png', height='120', width='260')),
                textOutput(outputId = "erc")),
     ),
     mainPanel(navbarPage(title = "",
@@ -181,23 +181,16 @@ ui <- fluidPage(
                                   tabsetPanel(
                                     tabPanel("General Information on BBNJ Negotiations",
                                              htmlOutput(outputId = "info2")),
-                                    tabPanel("Key Concepts in Statements",
-                                             fluidRow(
-                                               splitLayout(cellWidths = c("50%", "50%"),
-                                                           tableOutput("concepts2"),
-                                                           tableOutput("concepts2_compare"))
-                                             ),
-                                            fluidRow(
-                                              splitLayout(cellWidths = c("50%", "50%"),
-                                                            tableOutput("concepts2_alliance"),
-                                                            tableOutput("concepts2_alliance_compare"))   
-                                             )),
                                     tabPanel("Participants",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
                                                            tableOutput("participants"),
                                                            tableOutput("participants_compare"))
                                              )),
+                                    tabPanel("Talk Time",
+                                             plotOutput(outputId = "time")),
+                                    tabPanel("Reference Network",
+                                             visNetworkOutput("refnetwork", height = "1000px")),
                                     tabPanel("References to Science",
                                              fluidRow(
                                                splitLayout(cellWidths = c("50%", "50%"),
@@ -209,10 +202,18 @@ ui <- fluidPage(
                                                            tableOutput("scienceref_second"),
                                                            tableOutput("scienceref_second_compare"))
                                              )),
-                                    tabPanel("Talk Time",
-                                             plotOutput(outputId = "time")),
-                                    tabPanel("Reference Network",
-                                             visNetworkOutput("refnetwork", height = "1000px")),
+                                    tabPanel("Key Concepts in Statements",
+                                             fluidRow(
+                                               splitLayout(cellWidths = c("50%", "50%"),
+                                                           tableOutput("concepts2"),
+                                                           tableOutput("concepts2_compare"))
+                                             ),
+                                            fluidRow(
+                                              splitLayout(cellWidths = c("50%", "50%"),
+                                                            tableOutput("concepts2_alliance"),
+                                                            tableOutput("concepts2_alliance_compare"))   
+                                             )),
+
                                     tabPanel("Methodology",
                                              htmlOutput("methods_ethnography"))
                                   ))

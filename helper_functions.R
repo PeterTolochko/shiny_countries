@@ -114,6 +114,19 @@ top_5_clusters_plot <- function(country_name) {
   }
   
   
+  if (is.na(top_5$cluster_70_names)){
+    p <- ggplot() +
+      theme_void() +
+      theme(
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA)
+      )+
+      geom_text(aes(0,0,label=paste0("No data available for ", str_to_title(country_name))),
+                size = 6) +
+      xlab(NULL)
+    
+  }
+  else {
   p <- data %>%
     filter(cluster_70_names %in% top_5$cluster_70_names) %>%
     mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
@@ -143,7 +156,8 @@ top_5_clusters_plot <- function(country_name) {
     theme(legend.title = element_blank(),
           axis.title.x = element_blank()) +
     scale_color_brewer(type = 'qual', palette = 2)
-  return(p)
+  return(p) 
+  }
 }
 
 rnd_plot <- function(country_name) {
@@ -257,7 +271,7 @@ top_collab_table <- function(country_name) {
 
 coocurence_network <- function(country_name, n_words) {
   
-  if (country_name != "All") {
+  if (country_name != "All" | country_name != "El Salvador") {
     tidy_keywords <- data %>%
       filter(country_fa == country_name) %>%
       dplyr::select(ID, UT) %>%
