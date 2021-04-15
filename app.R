@@ -46,6 +46,7 @@ source("alliance.R", local = TRUE)$value
 data <- read_csv("shiny_data.gz")
 bbnj <- read_csv("states.csv")
 concepts_bbnj <- read_csv("concept_count.csv")
+concepts_bbnj <- concepts_bbnj[-1,]
 cnet <- read_csv("cnet.csv")
 cnet <- cnet %>% select(-c("X1"))
 research <- read_excel("research.xlsx")
