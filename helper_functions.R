@@ -14,6 +14,14 @@ get_region <- function(country) {
 }
 
 
+banned_countries <- c("Eu",
+                      "Holy See",
+                      "Cooks Island",
+                      "El Salvador",
+                      "Dominican Republic",
+                      "Grenada",
+                      "Dominica")
+
 
 create_concepts <- function(country_name) {
   data_country <- data %>%
@@ -61,7 +69,18 @@ regional_dist_plot <- function(country_name) {
   }
   
   
-  
+  if (country_name %in% banned_countries){
+    regional_dist <- ggplot() +
+      theme_void() +
+      theme(
+        plot.background = element_rect(fill = default_background_color,
+                                       color = NA)
+      )+
+      geom_text(aes(0,0,label=paste0("No data available for ", str_to_title(country_name))),
+                size = 6) +
+      xlab(NULL)
+    return(regional_dist)
+  } else {
   regional_dist <- regional_dist %>%
     mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
     group_by(cluster_70_names) %>%
@@ -89,6 +108,8 @@ regional_dist_plot <- function(country_name) {
     coord_flip() +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1))
   return(regional_dist)
+  }
+  
 }
 
 top_5_clusters_plot <- function(country_name) {
@@ -114,7 +135,7 @@ top_5_clusters_plot <- function(country_name) {
   }
   
   
-  if (is.na(top_5$cluster_70_names)){
+  if (is.na(top_5$cluster_70_names) | country_name %in% banned_countries){
     p <- ggplot() +
       theme_void() +
       theme(
@@ -243,6 +264,8 @@ top_collab_table <- function(country_name) {
   value_name <- paste0(str_to_title(country_name), ": Collaboration with")
   if (country_name == "all") {
     print("Collaboration Table is Only Available for Individual Countries")
+  } else if (country_name %in% str_to_lower(banned_countries)) {
+    print("No Data Available")
   } else {
     countries_net %>%
       activate(nodes) %>%
@@ -271,7 +294,7 @@ top_collab_table <- function(country_name) {
 
 coocurence_network <- function(country_name, n_words) {
   
-  if (country_name != "All" | country_name != "El Salvador") {
+  if (country_name != "All") {
     tidy_keywords <- data %>%
       filter(country_fa == country_name) %>%
       dplyr::select(ID, UT) %>%
@@ -306,32 +329,52 @@ coocurence_network <- function(country_name, n_words) {
   
   
   
+  if (country_name %in% banned_countries) {
+    word_pairs_graph <- tribble(
+      ~item1, ~item2, ~value,
+      "sorry", "no", 1,
+      "no",   "data", 1,
+      "data", "for", 1,
+      "for", country_name, 1
+    ) %>% graph_from_data_frame(directed = FALSE)
+    
+    vis_g <- toVisNetworkData(word_pairs_graph)
+    
+    
+    
+    vis_g$nodes$font.size <- 20
+    visNetwork(vis_g$nodes, vis_g$edges,
+               main = paste("No Data for ", country_name))
+  } else {
+    word_pairs_graph <- simplify(word_pairs_graph)
+    
+    # c1 = cluster_leading_eigen(word_pairs_graph)
+    # 
+    # my_colors <- brewer.pal(length(c1), 'RdYlBu')
+    
+    # V(word_pairs_graph)$color <- '#91bfdb'
+    vis_g <- toVisNetworkData(word_pairs_graph)
+    
+    
+    
+    vis_g$nodes$font.size <- 20
+    
+    visNetwork(vis_g$nodes, vis_g$edges,
+               main = paste(country_name, " Key-word Co-occurence Network")) %>%
+      visIgraphLayout(layout = "layout_with_fr") %>%
+      visEdges(color = list(highlight = 'gold',
+                            hover = 'gold'),
+               hoverWidth = 5) %>%
+      visNodes(color = list(
+                            highlight = 'gold',
+                            hover = 'gold',
+                            background = '#91bfdb')) %>%
+      visOptions(highlightNearest = list(enabled = TRUE, degree = 1,
+                                         labelOnly = FALSE, hover = TRUE),
+                 nodesIdSelection = TRUE)
+  }
   
-  
-  word_pairs_graph <- simplify(word_pairs_graph)
-  
-  c1 = cluster_leading_eigen(word_pairs_graph)
-  
-  my_colors <- brewer.pal(length(c1), 'RdYlBu')
-  
-  V(word_pairs_graph)$color <- my_colors[membership(c1)]
-  vis_g <- toVisNetworkData(word_pairs_graph)
-  
-  
-  
-  vis_g$nodes$font.size <- 20
-  
-  visNetwork(vis_g$nodes, vis_g$edges,
-             main = paste(country_name, " Key-word Co-occurence Network")) %>%
-    visIgraphLayout(layout = "layout_with_fr") %>%
-    visEdges(color = list(highlight = 'gold',
-                          hover = 'gold'),
-             hoverWidth = 3) %>%
-    visNodes(color = list(higlight = 'gold',
-                          hover = 'gold')) %>%
-    visOptions(highlightNearest = list(enabled = TRUE, degree = 1,
-                                       labelOnly = FALSE, hover = TRUE),
-               nodesIdSelection = TRUE)
+
 }
 
 
