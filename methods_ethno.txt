@@ -1,9 +1,15 @@
 The used data was obtained through participant and ethnographic observation during the ongoing BBNJ negotiations. 
-During the second and third two-week IGC sessions at the United Nations' New York Headquarters, we conducted CEE at the site where governments negotiate the BBNJ Treaty. 
+During the second and third two-week IGC sessions at the United Nations' New York Headquarters, we conducted Collaborative Event Ethnography (CEE) at the site where governments negotiate the BBNJ Treaty. 
 CEE has become a widely accepted research method in international environmental politics which uses intergovernmental negotiations as field sites for data collection (<a href="https://www.mitpressjournals.org/doi/abs/10.1162/GLEP_e_00236?mobileUi=0">Campbell et al., 2014</a>;
 <a href="https://www.mitpressjournals.org/doi/full/10.1162/glep_a_00503">Hughes & Vadrot, 2019</a>;
 <a href="https://www.tandfonline.com/doi/full/10.1080/19460171.2020.1768131">Vadrot, 2020</a>). 
-Further, CEE enables the researcher to collect different data types, such as interview material, field notes, and visual and audio material, and to connect various data sources (Gray et al., 2020).
+Further, CEE enables the researcher to collect different data types, such as interview material, field notes, and visual and audio material, and to connect various data sources (
+
+<a href="https://direct.mit.edu/glep/article/14/3/1/14685/Studying-Global-Environmental-Meetings-to">Gray et al., 2020</a>)
+.
+CEE is a form of team ethnography with institutional and organisational elements. We conducted CEE at two sites: the second and the third session of the Intergovernmental Conference (IGC 2 and 3) at the United Nations headquarters in New York.
+
+Three members of our team participated in working group meetings and plenaries during the two-week long sessions. 
 During plenaries, working group sessions, and side events, we took systematic field notes based on a matrix, in which we entered observations on contextual factors, 
 such as the delegation of the speaker, the section of the draft being addressed, whether the statement made reference to scientific knowledge and a full description of the statement's content. 
 Notes on statements content are close to transcripts of a state’s expression of views. 
@@ -13,13 +19,18 @@ Detailed information on organizing institutions, speakers, and content was also 
 
 
 The obtained ethnographic data was then analyzed using the R programming language. In R, we aggregated all individual observations and analyzed the whole dataset quantitatively according to our variables of interest. 
-In the following we give an overview about the variables and how they were derived from the data. <br> 
+Here, we give an overview about the variables presented in the tabs of this dashboard and how they were derived from the ethnographic data. <br> 
 <br>
-The variable 	<em> Concepts used in Statements </em> scans the bulk of statements for key scientific concepts identified in the bibliometric analysis. <br>
+
 <em>Participants </em> gives an overview about the delegation size of each state, adding the delegation sizes of the CBD COP 2018.<br>
-The variable <em> References to Science </em> counts the amount of times the researcher indicated that the statement at hand made reference to scientific knowledge or used scientific reasoning to support the states' position.<br>
 The variable <em> Talk Time </em> aggregates the time that each actor in the negotiations spoke - and if available the aggregated time of its alliance. Each observation in the matrix received a time stamp and with this the difference between points of observations could be calculated as the time that each participant spoke.
 <br>
+The <em> Reference Network </em> how states referred to each other in their statements in the negotiations. 
+<br>
+The variable <em> References to Science </em> counts the amount of times the researcher indicated that the statement at hand made reference to scientific knowledge or used scientific reasoning to support the states' position.<br>
+<br>
+The variable <em> Key Concepts in Statements </em> scans the bulk of statements for key scientific concepts identified in the bibliometric analysis. <br>
+
 The data on alliances stems from the ethnographic fieldwork. During the BBNJ negotiations, many countries formed alliances. Within these alliance, one country spoke on behalf of the whole group of countries that belongs 
 to that alliance. In order to analyse this accordingly, we aggregated each variable for each alliance to display the behaviour during the negotiations per alliance. 
 
