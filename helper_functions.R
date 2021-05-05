@@ -725,13 +725,28 @@ reference_network <- function(country_name) {
   net <- simplify(net, remove.loops = TRUE)
   Isolated = which(degree(net)==0)
   net = delete.vertices(net, Isolated)
-  my_colors <- rep("#4885C1", length(V(net)))
+  my_colors <- rep("#91bfdb", length(V(net)))
   my_colors[which(V(net)$name == country_name)] <- "#AE3A4E"
   V(net)$color <- my_colors
   data <- toVisNetworkData(net)
-  plot <- visNetwork(nodes = data$nodes, edges = data$edges, height = "1000px", width = "100%", 
-                     main = paste(country_name, " Reference Network in Negotiations")) %>% 
+  # plot <- visNetwork(nodes = data$nodes, edges = data$edges, height = "1000px", width = "100%", 
+  #                    main = paste(country_name, " Reference Network in Negotiations")) %>% 
     
-    visIgraphLayout()  
-  visIgraph(net)
+  #   visIgraphLayout()  
+  # visIgraph(net)
+
+
+  visNetwork(nodes = data$nodes, edges = data$edges,
+           main = paste(country_name, " Reference Network in Negotiations")) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visEdges(color = list(highlight = 'gold',
+                        hover = 'gold'),
+           hoverWidth = 5) %>%
+  visNodes(color = list(
+                        highlight = 'gold',
+                        hover = 'gold',
+                        background = '#91bfdb')) %>%
+  visOptions(highlightNearest = list(enabled = TRUE, degree = 1,
+                                     labelOnly = FALSE, hover = TRUE),
+             nodesIdSelection = TRUE)
 }
