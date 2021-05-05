@@ -451,8 +451,9 @@ create_concepts_2_alliance <- function(country_name) {
                                                                       ifelse (country_name %in% eu, "eu",
                                                                               NA)))))))) 
   if (country_name == "all") {
-    out_concept_bbnj <- concepts_bbnj %>% select(concept, actor) 
-    mutate(n = reference) %>% select(concept, n)
+    out_concept_bbnj <- concepts_bbnj %>% 
+      tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
+      filter(actor == "all")
   } else {
     out_concept_bbnj <- concepts_bbnj %>% 
       tidytext::unnest_tokens(actor, actor, token = 'regex', pattern=", ") %>% 
