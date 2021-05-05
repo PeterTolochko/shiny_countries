@@ -73,6 +73,10 @@ BBNJ negotiations."
 
 erc <- "This Dashboard is part of the MARIPOLDATA project that has received funding from the European Research Council (ERC) 
 under the European Union's Horizon 2020 research and innovation programme (grant agreement No 804599)."
+              
+version <- paste0("Version 1, last updated: ", Sys.Date())
+
+
 
 #----------------------------------------------------
 ### Renaming some incosistently named countries in the bbnj dataset ###
@@ -141,6 +145,8 @@ ui <- fluidPage(
                tags$a(href="https://erc.europa.eu/",
                       tags$img(src='Logo_E.png', height='120', width='260')),
                textOutput(outputId = "erc")),
+      tabPanel("Version",
+               textOutput(outputId = "version")),
     ),
     mainPanel(navbarPage(title = "",
                          
@@ -318,6 +324,10 @@ server <- function(input, output, session){
     HTML(erc)
   })
   
+  # Version Header
+  output$version <- renderText({
+    HTML(version)
+  })
   
   # Country description 1
   output$info1 <- renderUI({
