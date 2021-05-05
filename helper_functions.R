@@ -91,13 +91,13 @@ regional_dist_plot <- function(country_name) {
     geom_bar(aes(x = reorder(cluster_70_names, rel_freq), rel_freq), stat = 'identity',
              fill = 'steelblue') +
     ylab(paste0('Relative Frequency of Clusters')) +
-    ggtitle(paste0(country_name, ': Relative Frequency of Clusters')) +
+    ggtitle(paste0(country_name)) +
     xlab(NULL) +
     theme_tufte() +
     theme(
-      plot.title = element_text(hjust = .5, size = 20),
+      plot.title = element_text(size = 15),
       axis.title.x = element_text(size = 15),
-      axis.text.x = element_text(size = 15),
+      axis.text.x = element_text(size = 13),
       axis.text.y = element_text(size = 15),
       plot.background = element_rect(fill = default_background_color,
                                      color = NA),
@@ -148,6 +148,8 @@ top_5_clusters_plot <- function(country_name) {
     
   }
   else {
+
+
   p <- data %>%
     filter(cluster_70_names %in% top_5$cluster_70_names) %>%
     mutate(cluster_70_names = str_to_title(cluster_70_names)) %>%
@@ -175,7 +177,10 @@ top_5_clusters_plot <- function(country_name) {
     ylab("Number of Articles") +
     ggtitle(paste0(country_name, ': Top 5 Cluster Over Time')) +
     theme(legend.title = element_blank(),
-          axis.title.x = element_blank()) +
+          axis.title.x = element_blank(),
+          legend.position = "top",
+          legend.direction='vertical',
+          legend.justification='left') +
     scale_color_brewer(type = 'qual', palette = 2)
   return(p) 
   }
