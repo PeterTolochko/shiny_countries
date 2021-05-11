@@ -611,13 +611,19 @@ science_ref_second <- function(country_name) {
 plot_time <- function(country_name) {
   bbnj_output <- bbnj %>% filter(actor == country_name)
   value_name <- paste0(str_to_title(country_name), ": Total Speaking Time (", round(bbnj_output$total_time/60, 2), " Minutes)")
+  value_name_all <- paste0(str_to_title(country_name), ": Average Speaking Time (", round(bbnj_output$total_time/60, 2), " Minutes)")
   
+  if( country_name != "all") {
   plot.title_1 <- bbnj_output %>% 
     select(total_time) %>%
     mutate(total_time = ifelse(is.na(total_time), "",
                                paste0(value_name)))
-  
-  
+  } else { 
+  plot.title_1 <- bbnj_output %>% 
+    select(total_time) %>%
+    mutate(total_time = ifelse(is.na(total_time), "",
+                               paste0(value_name_all)))
+  }
   
   if (is.na(bbnj_output$total_time) | bbnj_output$total_time == 0) {
     
@@ -742,7 +748,7 @@ reference_network <- function(country_name) {
 
 
   visNetwork(nodes = data$nodes, edges = data$edges,
-           main = paste(country_name, " Reference Network in Negotiations")) %>%
+           main = paste0("Reference Network in Negotiations")) %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
   visEdges(color = list(highlight = 'gold',
                         hover = 'gold'),
