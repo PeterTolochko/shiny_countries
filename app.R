@@ -48,7 +48,7 @@ bbnj <- read_csv("states.csv")
 concepts_bbnj <- read_csv("concept_count.csv")
 concepts_bbnj <- concepts_bbnj[-1,]
 cnet <- read_csv("cnet.csv")
-cnet <- cnet %>% select(-c("X1"))
+cnet <- cnet[, -1]
 research <- read_excel("research.xlsx")
 list_concepts <- read_csv("list_concepts.csv", col_names = F) %>%
   pull(X1)
@@ -62,19 +62,27 @@ bib_meth <- paste(bib_meth, collapse = " ")
 ethno_meth <- read_lines("methods_ethno.txt")
 ethno_meth <- paste(ethno_meth, collapse = " ")
 
+
+disclaimer <- read_lines("disclaimer.txt")
+disclaimer <- paste(disclaimer, collapse = " ")
+
 #----------------------------------------------------
 
 manual <- "This MARIPOLDATA Marine Biodiversity Dashboard 
 serves to inform about international marine biodiversity 
 research and politics. By selecting the respective tab, 
-it is possible to access per country information on about
+it is possible to access per country information about
 marine biodiversity research and indicators on its position in the
 BBNJ negotiations." 
 
-erc <- "This Dashboard is part of the MARIPOLDATA project that has received funding from the European Research Council (ERC) 
+erc <- "<p><p> This Dashboard is part of the MARIPOLDATA project that has received funding from the European Research Council (ERC) 
 under the European Union's Horizon 2020 research and innovation programme (grant agreement No 804599)."
               
-version <- paste0("Version 1, last updated: ", Sys.Date())
+
+version <- paste0(disclaimer,
+                  erc,
+                  "<p> Version 1.2, last updated 12.08.2022")
+
 
 
 
@@ -90,6 +98,7 @@ bbnj$actor[which(bbnj$actor == "brunei darussalam")] <- "brunei"
 
 
 bbnj$alliance[which(bbnj$alliance == "russian federation")] <- "russia"
+bbnj$alliance[which(bbnj$alliance == "united kingdom")] <- "uk"
 bbnj$alliance[which(bbnj$alliance == "viet nam")] <- "vietnam"
 bbnj$alliance[which(bbnj$alliance == "syrian arabic republic")] <- "syria"
 bbnj$alliance[which(bbnj$alliance == "republic of korea")] <- "south korea"
@@ -99,19 +108,25 @@ bbnj$alliance[which(bbnj$alliance == "brunei darussalam")] <- "brunei"
 
 
 # add Countries (entities) that do not exist in bibliometric data 
-data <- data %>% add_row(country_fa = "Eu")
+# data <- data %>% add_row(country_fa = "Eu")
 data <- data %>% add_row(country_fa = "Holy See")
 data <- data %>% add_row(country_fa = "All")
 data <- data %>% add_row(country_fa = "Cooks Island")
 data <- data %>% add_row(country_fa = "El Salvador")
 data <- data %>% add_row(country_fa = "Dominican Republic")
 data <- data %>% add_row(country_fa = "Grenada")
-
+data <- data %>% add_row(country_fa = "Nauru")
+data <- data %>% add_row(country_fa = "Samoa")
+data <- data %>% add_row(country_fa = "Kiribati")
+data <- data %>% add_row(country_fa = "Tonga")
+data <- data %>% add_row(country_fa = "Tuvalu")
 
 
 ### agg_total_time is not present for some aliance (NA), therefore there is a problem
 ### for the naming of the second plot (plot.title_2)
 ### THIS IS PROBABLY WRONG!!! SHOULD BE DEALT WITH PROPERLY IN THE FUTURE ###
+
+t <- bbnj$agg_total_time
 
 bbnj <- bbnj %>%
   mutate(agg_total_time = talk_time_MGR +
@@ -120,15 +135,34 @@ bbnj <- bbnj %>%
            talk_time_CBTT +
            talk_time_crosscutting)
 
+
+### add EU R&D investment from this source: https://webgate.ec.europa.eu/dashboard/sense/app/93297a69-09fd-4ef5-889f-b83c4e21d33e/sheet/erUXRa/state/analysis
+
+
+
+bbnj$'2015_expenditure_rd'[bbnj$actor == "eu"] <- 9380000000
+bbnj$'2016_expenditure_rd'[bbnj$actor == "eu"] <- 9000000000
+bbnj$'2017_expenditure_rd'[bbnj$actor == "eu"] <- 8810000000
+bbnj$'2018_expenditure_rd'[bbnj$actor == "eu"] <- 9410000000
+bbnj$'2019_expenditure_rd'[bbnj$actor == "eu"] <- 10660000000
+
+
+bbnj$'2015_expenditure_rd_pc'[bbnj$actor == "eu"] <- 9380000000 / 447700000
+bbnj$'2016_expenditure_rd_pc'[bbnj$actor == "eu"] <- 9000000000 / 447700000
+bbnj$'2017_expenditure_rd_pc'[bbnj$actor == "eu"] <- 8810000000 / 447700000
+bbnj$'2018_expenditure_rd_pc'[bbnj$actor == "eu"] <- 9410000000 / 447700000
+bbnj$'2019_expenditure_rd_pc'[bbnj$actor == "eu"] <- 10660000000 / 447700000 
+
+
 # Page Layout #-------------------------------------------------------------
 ui <- fluidPage(
   setBackgroundColor(default_background_color),
   sidebarLayout(
     sidebarPanel(
       tags$a(href="https://www.maripoldata.eu",
-             tags$img(src='maripol.png', height='120', width='150')),
+             tags$img(src='maripol2.png', height='120', width='150')),
       tags$a(href="https://politikwissenschaft.univie.ac.at/",
-             tags$img(src='Politikwissenschaft_en_4c.png', height='120', width='360')),
+             tags$img(src='Politikwissenschaft_en_4cc.png', height='120', width='360')),
 
       titlePanel('Marine Biodiversity Country Dashboard'),
       tags$a(href="https://www.un.org/bbnj/",
@@ -138,21 +172,21 @@ ui <- fluidPage(
       selectInput(inputId = "country",
                   label = "Choose a Country",
                   selected = "all",
-                  choices = c("All", sort(unique(data$country_fa)))),
+                  choices = c("All", "EU", sort(unique(data$country_fa)))),
       checkboxInput("compare_country_check", "Do you want to compare with\n another country?", value = FALSE),
       uiOutput("compare_country"), # checkbox to see if the user wants another country to compare
       tabPanel("ERC",
                tags$a(href="https://erc.europa.eu/",
-                      tags$img(src='Logo_E.png', height='120', width='260')),
-               textOutput(outputId = "erc")),
+                      tags$img(src='Logo_E2.png', height='120', width='260'))),
+      hr(),
       tabPanel("Version",
-               textOutput(outputId = "version")),
+               htmlOutput(outputId = "version")),
     ),
     mainPanel(navbarPage(title = "",
                          
-                         tabPanel(h4("Scientometric Data"),
+                         tabPanel(h4("Bibliometric Data"),
                                   tabsetPanel(
-                                    tabPanel("General Information on Ocean Science Marine Biodiversity Research",
+                                    tabPanel("General Information",
                                              htmlOutput(outputId = "info1")),
                                     tabPanel("Research Investments",
                                              plotOutput(outputId = "rd_invest")),
@@ -186,7 +220,7 @@ ui <- fluidPage(
                                   )),
                          tabPanel(h4("Ethnographic Data"),
                                   tabsetPanel(
-                                    tabPanel("General Information on BBNJ Negotiations",
+                                    tabPanel("General Information",
                                              htmlOutput(outputId = "info2")),
                                     tabPanel("Participants",
                                              fluidRow(
@@ -196,6 +230,17 @@ ui <- fluidPage(
                                              )),
                                     tabPanel("Talk Time",
                                              plotOutput(outputId = "time")),
+                                    tabPanel("Amount of Statements",
+                                             fluidRow(
+                                               splitLayout(cellWidths = c("50%", "50%"),
+                                                           tableOutput("statements"),
+                                                           tableOutput("statements_compare"))
+                                               ),
+                                               fluidRow(
+                                                 splitLayout(cellWidths = c("50%", "50%"),
+                                                             tableOutput("statements_second"),
+                                                             tableOutput("statements_second_compare"))
+                                               )),
                                     tabPanel("Reference Network",
                                              visNetworkOutput("refnetwork", height = "1000px")),
                                     tabPanel("References to Science",
@@ -333,7 +378,7 @@ server <- function(input, output, session){
   output$info1 <- renderUI({
     country_name <- str_to_lower(input$country)
     intemediate <- research %>% filter(actor == country_name) %>% 
-      select(text_science) %>% print(text_science, sep="<br/>")
+      select(text_science) %>% print(sep="<br/>")
     if (length(intemediate$text_science) == 0) {
       print("For this country we do not have specific information yet")
     } else {HTML(intemediate$text_science)}
@@ -344,7 +389,7 @@ server <- function(input, output, session){
   output$info2 <- renderUI({
     country_name <- str_to_lower(input$country)
     intemediate <- research %>% filter(actor == country_name) %>% 
-      select(text_bbnj) %>% print(text_bbnj, sep="<br/>")
+      select(text_bbnj) %>% print(sep="<br/>")
     if (length(intemediate$text_bbnj) == 0) {
       print("For this country we do not have specific information yet")
     } else {HTML(intemediate$text_bbnj)}
@@ -431,6 +476,26 @@ server <- function(input, output, session){
     participants_table(country_name)
   }, digits = 0)
   
+  #----------------------------------------------------
+  # Table for BBNJ statement frequency
+  output$statements <- renderTable({
+    country_name <- str_to_lower(input$country)
+    statements_table(country_name)
+  }, digits = 0)
+  
+  
+  output$statements_second <- renderTable({
+    country_name <- str_to_lower(input$country)
+    statements_table2(country_name)
+  }, digits = 0)
+  
+  output$statements_compare <- renderTable({
+    req(input$compare_country_check)
+    country_name <- str_to_lower(input$compare_country)
+    statements_table(country_name)
+  }, digits = 0)
+  
+
   #----------------------------------------------------
   # Table for concepts from BBNJ
   output$concepts2 <- renderTable({
